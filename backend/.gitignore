@@ -1,0 +1,16 @@
+# python files
+venv/
+__pycache__/
+.pytest_cache
+backend/schema.yml
+
+# backend tests
+backend/.coverage*
+backend/cov.xml
+backend/cov-report/
+
+# misc
+.vscode
+.git/
+.env
+frontend/local.env
