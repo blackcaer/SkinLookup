@@ -17,7 +17,16 @@ export default function Page() {
 }
   
   return (
-    <div className="flex flex-col md:flex-col gap-4 md:overflow-hidden">
+    <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden">
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
+      <ItemPreview item={sampleData} />
       <ItemPreview item={sampleData} />
       
     </div>

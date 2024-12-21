@@ -6,7 +6,7 @@ export default function SomeLogo() {
     <div
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}>
       <div >
-        <PresentationChartLineIcon className="h-28 w-12" />
+        <PresentationChartLineIcon className="h-12 md:h-28 w-12" />
       </div>
       <p className="text-[32px] "> SkinLookup </p>
 

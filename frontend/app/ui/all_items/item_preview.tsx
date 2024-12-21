@@ -1,30 +1,17 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { MapIcon } from "@heroicons/react/24/outline";
 import { FC } from "react";
 import Link from "next/link";
-
-interface Item {
-    id: number;
-    appId: number;
-    itemType: string;
-    itemCollection: string;
-    name: string;
-    nameId: number;
-    previewUrl: string;
-    supplyTotalEstimated: number;
-    timeAccepted: string;
-    storePrice: number;
-}
+import { ItemInfo } from "@/app/ui/types";
 
 interface ItemPreviewProps {
-    item: Item;
+    item: ItemInfo;
 }
 
 const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
 
   return (
-    <Link href="" className="flex flex-row">
+    <Link href="/" className="flex flex-col">
         <Image 
             src={item.previewUrl || "/default.png"}
             alt={`${item.name} picture`}
@@ -32,6 +19,8 @@ const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
             width={220}
             height={220}
         />
+        <label> Collection {item.itemCollection} </label>
+        <label> {item.name} </label>
     </Link>
   );
 }
