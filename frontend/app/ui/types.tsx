@@ -1,5 +1,4 @@
 export interface ItemInfo {
-    id: number;
     appId: number;
     itemType: string;               //
     itemCollection: string;         //
