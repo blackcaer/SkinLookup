@@ -64,7 +64,7 @@ export default function ChartPrice({
             <Line
               type="monotone"
               dataKey="median"
-              stroke="var(--color-price)"
+              stroke="var(--color-median)"
               strokeWidth={2}
               dot={false}
             />

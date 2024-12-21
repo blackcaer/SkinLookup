@@ -11,25 +11,19 @@ export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
 
-  const lineChartConfig = {
-    desktop: {
-      label: "Visitors",
-      color: "hsl(var(--chart-1))",
-    },
-  };
 
   const barChartConfig = {
-    sales: {
-      label: "Activity minutes",
-      color: "hsl(var(--chart-1))",
-    },
-    price: {
-      label: "Average activity",
+    volume: {
+      label: "Volume of sold items",
       color: "hsl(var(--chart-2))",
+    },
+    median: {
+      label: "Median price of sold items",
+      color: "hsl(var(--chart-1))",
     },
   };
 
-  const filteredPhsm = item.phsm.map(({ volume, ...rest }) => rest);
+  //const filteredPhsm = item.phsm.map(({ volume, ...rest }) => rest);
 
   return (
     <div>

@@ -64,7 +64,7 @@ export default function ChartVolume({
             <Line
               type="monotone"
               dataKey="volume"
-              stroke="var(--color-price)"
+              stroke="var(--color-volume)"
               strokeWidth={2}
               dot={false}
             />
