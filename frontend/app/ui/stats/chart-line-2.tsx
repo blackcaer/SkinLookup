@@ -1,6 +1,7 @@
 "use client"
 
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
+import React from 'react';
+import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip as ChartTooltip } from "recharts"
 import { format } from 'date-fns';
 
 import {
@@ -13,8 +14,7 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+  ChartTooltipContent
 } from "@/components/ui/chart"
 
 interface ChartLine2Props {
@@ -22,12 +22,13 @@ interface ChartLine2Props {
   config: ChartConfig;
 }
 
-export default function ChartLine2({ data, config }: ChartLine2Props) {
+export default function ChartLine2({ data, config }: ChartLine2Props)  {
+  
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Activity trend</CardTitle>
-        <CardDescription>Average activity during last week</CardDescription>
+        <CardTitle>Price over time</CardTitle>
+        <CardDescription>Price of an item on Steam Market since item's release</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={config}>
@@ -43,7 +44,6 @@ export default function ChartLine2({ data, config }: ChartLine2Props) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis 
               dataKey="date" 
-              tickFormatter={(date) => format(new Date(date), 'MM/dd/yyyy')}
               angle={-45}
               textAnchor="end"
             />
@@ -61,4 +61,4 @@ export default function ChartLine2({ data, config }: ChartLine2Props) {
       </CardContent>
     </Card>
   );
-}
+};
