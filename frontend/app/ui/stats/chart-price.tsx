@@ -24,19 +24,19 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-interface ChartLine2Props {
+interface ChartPriceProps {
   data: { date: string; median: number }[];
   config: ChartConfig;
   title?: string;
   description?: string;
 }
 
-export default function ChartLine2({
+export default function ChartPrice({
   data,
   config,
   title,
   description,
-}: ChartLine2Props) {
+}: ChartPriceProps) {
   title = title || "Price over time";
   description =
     description || "Price of an item on Steam Market since item's release";

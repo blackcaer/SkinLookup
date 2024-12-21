@@ -2,7 +2,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import Image from "next/image";
 import { ItemInfo } from "@/app/ui/types";
-import ChartLine2 from "@/app/ui/stats/chart-line-2";
+import ChartPrice from "@/app/ui/stats/chart-price";
 
 import { demo1, demo2 } from "@/app/ui/demo-data";
 
@@ -56,7 +56,7 @@ export default function Page() {
             </div>
 
                 
-            <ChartLine2 
+            <ChartPrice 
                 data={filteredPhsm} 
                 config={barChartConfig}
                 />

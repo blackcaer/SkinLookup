@@ -1,7 +1,7 @@
 import Image from "next/image";
 import StatsLineChart from "@/app/ui/stats/chart-line-1";
 import ChartBar1 from "@/app/ui/stats/chart-bar-1";
-import ChartLine2 from "@/app/ui/stats/chart-line-2";
+import ChartPrice from "@/app/ui/stats/chart-price";
 
 export default function Page() {
   const lineChartData = [
@@ -52,7 +52,7 @@ export default function Page() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <ChartBar1 data={barChartData} config={barChartConfig} />
-        <ChartLine2 data={barChartData} config={barChartConfig} />
+        {/* <ChartLine2 data={barChartData} config={barChartConfig} /> */}
       </div>
     </div>
   );
