@@ -19,8 +19,8 @@ const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
             width={220}
             height={220}
         />
-        <label> Collection {item.itemCollection} </label>
-        <label> {item.name} </label>
+        <h2> {item.name} </h2>
+        {/* <p> Collection {item.itemCollection} </p> */}
     </Link>
   );
 }
