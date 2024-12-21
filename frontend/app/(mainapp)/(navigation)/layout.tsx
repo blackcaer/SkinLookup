@@ -1,16 +1,5 @@
-import type { Metadata } from "next";
 import '@/app/ui/global.css';
-
-
 import SideNav from "@/app/ui/sidenav";
-
-export const metadata: Metadata = {
-  title: {
-    template: '%s | SkinLookup',
-    default: 'SkinLookup',
-  },
-  description: 'Rust skins charts and statistics',
-};
 
 export default function Layout({
   children,

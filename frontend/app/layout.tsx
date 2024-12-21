@@ -2,24 +2,12 @@ import type { Metadata } from "next";
 import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 
-import localFont from "next/font/local";
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
-
 export const metadata: Metadata = {
   title: {
-    template: '%s | LiveActive',
-    default: 'LiveActive',
+    template: '%s | SkinLookup',
+    default: 'SkinLookup',
   },
-  description: 'Example site called LiveActive',
+  description: 'Rust skins charts and statistics',
 };
 
 export default function RootLayout({
