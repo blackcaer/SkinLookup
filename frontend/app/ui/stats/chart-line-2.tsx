@@ -1,8 +1,15 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip as ChartTooltip } from "recharts"
-import { format } from 'date-fns';
+import React from "react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+  Tooltip as ChartTooltip,
+} from "recharts";
+import { format } from "date-fns";
 
 import {
   Card,
@@ -10,25 +17,34 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltipContent
-} from "@/components/ui/chart"
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 
 interface ChartLine2Props {
-  data: { date: string; median: number;}[];
+  data: { date: string; median: number }[];
   config: ChartConfig;
+  title?: string;
+  description?: string;
 }
 
-export default function ChartLine2({ data, config }: ChartLine2Props)  {
-  
+export default function ChartLine2({
+  data,
+  config,
+  title,
+  description,
+}: ChartLine2Props) {
+  title = title || "Price over time";
+  description =
+    description || "Price of an item on Steam Market since item's release";
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Price over time</CardTitle>
-        <CardDescription>Price of an item on Steam Market since item's release</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={config}>
@@ -42,11 +58,7 @@ export default function ChartLine2({ data, config }: ChartLine2Props)  {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
-              angle={-45}
-              textAnchor="end"
-            />
+            <XAxis dataKey="date" angle={-45} textAnchor="end" />
             <YAxis />
             <ChartTooltip content={<ChartTooltipContent />} />
             <Line
@@ -61,4 +73,4 @@ export default function ChartLine2({ data, config }: ChartLine2Props)  {
       </CardContent>
     </Card>
   );
-};
+}

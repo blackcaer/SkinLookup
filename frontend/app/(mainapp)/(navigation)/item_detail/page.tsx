@@ -56,7 +56,10 @@ export default function Page() {
             </div>
 
                 
-            <ChartLine2 data={filteredPhsm} config={barChartConfig} />
+            <ChartLine2 
+                data={filteredPhsm} 
+                config={barChartConfig}
+                />
 
         </div>
 
