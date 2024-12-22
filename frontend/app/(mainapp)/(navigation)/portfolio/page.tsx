@@ -9,13 +9,9 @@ import { AccordionCharts } from "@/app/ui/portfolio/accordion-charts";
 export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
-  {
-    /* max-h-[500px] */
-  }
+
   return (
     <>
-      {/* <div className="flex flex-col lg:flex-row gap-2 justify-center mb-6"> */}
-      {/* lg:grid-cols-2 xl:grid-cols-5 gap-2 */}
       <div className="flex flex-row justify-center mb-6 gap-4">
         <CardInfo
           title="Total value"
