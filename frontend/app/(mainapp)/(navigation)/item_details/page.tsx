@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import ChartPrice from "@/app/ui/stats/chart-price";
+import ChartPrice from "@/app/ui/charts/chart-price";
 
 import { demo1, demo2 } from "@/app/ui/demo-data";
-import ChartVolume from "@/app/ui/stats/chart-volume";
+import ChartVolume from "@/app/ui/charts/chart-volume";
 import { ChartConfigVolMed } from "@/app/ui/chart-configs";
 
 export default function Page() {

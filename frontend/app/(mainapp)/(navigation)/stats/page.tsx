@@ -1,7 +1,7 @@
 import Image from "next/image";
-import StatsLineChart from "@/app/ui/stats/chart-line-1";
-import ChartBar1 from "@/app/ui/stats/chart-bar-1";
-import ChartPrice from "@/app/ui/stats/chart-price";
+import StatsLineChart from "@/app/ui/charts/chart-line-1";
+import ChartBar1 from "@/app/ui/charts/chart-bar-1";
+import ChartPrice from "@/app/ui/charts/chart-price";
 
 export default function Page() {
   const lineChartData = [

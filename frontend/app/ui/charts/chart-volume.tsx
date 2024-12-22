@@ -9,7 +9,6 @@ import {
   YAxis,
   Tooltip as ChartTooltip,
 } from "recharts";
-import { format } from "date-fns";
 
 import {
   Card,

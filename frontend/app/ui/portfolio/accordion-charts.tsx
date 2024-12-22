@@ -4,10 +4,10 @@ import {
     AccordionItem,
     AccordionTrigger,
   } from "@/components/ui/accordion"
-import ChartPrice from "../stats/chart-price"
+import ChartPrice from "../charts/chart-price"
 import { demo1, demo2 } from "@/app/ui/demo-data";
 import { ChartConfigVolMed } from "@/app/ui/chart-configs";
-import ChartVolume from "../stats/chart-volume";
+import ChartVolume from "../charts/chart-volume";
 
 export function AccordionCharts() {
     const item = demo2;     //TODO - add props, change to real data

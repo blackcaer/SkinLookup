@@ -1,4 +1,4 @@
-import {ProfileForm} from "@/app/ui/contact/contact_form";
+import {ProfileForm} from "@/app/ui/about/contact_form";
 
 export default function Page() {
 

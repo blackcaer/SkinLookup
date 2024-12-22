@@ -2,7 +2,7 @@ import Image from "next/image";
 import ItemPreview from "@/app/ui/all_items/item_preview";
 import { demo1, demo2 } from "@/app/ui/demo-data";
 import { ChartConfigVolMed } from "@/app/ui/chart-configs";
-import ChartPrice from "@/app/ui/stats/chart-price";
+import ChartPrice from "@/app/ui/charts/chart-price";
 import CardInfo from "@/app/ui/portfolio/card-info";
 import { AccordionCharts } from "@/app/ui/portfolio/accordion-charts";
 

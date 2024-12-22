@@ -10,7 +10,7 @@ interface ItemPreviewProps {
 
 const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
   return (
-    <Link href="/" className="flex flex-col w-[240px]">
+    <Link href="/item_details" className="flex flex-col w-[240px]">
       <Image
         src={item.previewUrl || "/default.png"}
         alt={`${item.name} picture`}
