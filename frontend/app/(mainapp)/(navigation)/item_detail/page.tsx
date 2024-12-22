@@ -6,22 +6,11 @@ import ChartPrice from "@/app/ui/stats/chart-price";
 
 import { demo1, demo2 } from "@/app/ui/demo-data";
 import ChartVolume from "@/app/ui/stats/chart-volume";
+import { ChartConfigVolMed } from "@/app/ui/chart-configs";
 
 export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
-
-
-  const barChartConfig = {
-    volume: {
-      label: "Volume of sold items",
-      color: "hsl(var(--chart-2))",
-    },
-    median: {
-      label: "Median price of sold items",
-      color: "hsl(var(--chart-1))",
-    },
-  };
 
   //const filteredPhsm = item.phsm.map(({ volume, ...rest }) => rest);
 
@@ -51,9 +40,9 @@ export default function Page() {
           </div>
         </div>
 
-        <ChartPrice data={item.phsm} config={barChartConfig} />
+        <ChartPrice data={item.phsm} config={ChartConfigVolMed} />
 
-        <ChartVolume data={item.phsm} config={barChartConfig} />
+        <ChartVolume data={item.phsm} config={ChartConfigVolMed} />
       </div>
     </div>
   );
