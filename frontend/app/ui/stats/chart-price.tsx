@@ -28,32 +28,48 @@ interface ChartPriceProps {
   config: ChartConfig;
   title?: string;
   description?: string;
+  className?: string,
+  chartClassName?: string,
 }
+
+const formatDate = (dateString: string) => {
+  const [day, month, year] = dateString.split('/');
+  const shortYear = year.slice(-2);
+  return `${day}/${month}/${shortYear}`;
+};
 
 export default function ChartPrice({
   data,
   config,
   title,
   description,
+  className,
+  chartClassName
 }: ChartPriceProps) {
   title = title || "Price over time";
   description =
     description || "Price of an item on Steam Market since item's release";
+
+  const formattedData = data.map(item => ({
+    ...item,
+    date: formatDate(item.date),
+  }));
+
   return (
-    <Card className="w-full">
+    <Card className={`w-full ${className}`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={config}>
+      <CardContent className="">
+        <ChartContainer config={config} className={`${chartClassName}`}>
           <LineChart
-            data={data}
+            data={formattedData}
             margin={{
               top: 5,
               right: 5,
-              left: -35,
-              bottom: 35,
+              left: -30,
+              bottom: 25,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />

@@ -24,32 +24,48 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-interface ChartPriceProps {
+interface ChartVolumeProps {
   data: { date: string; volume: number }[];
   config: ChartConfig;
   title?: string;
   description?: string;
+  className?: string;
+  chartClassName?: string;
 }
+
+const formatDate = (dateString: string) => {
+  const [day, month, year] = dateString.split('/');
+  const shortYear = year.slice(-2);
+  return `${day}/${month}/${shortYear}`;
+};
 
 export default function ChartVolume({
   data,
   config,
   title,
   description,
-}: ChartPriceProps) {
+  className,
+  chartClassName,
+}: ChartVolumeProps) {
   title = title || "Volume over time";
   description =
     description || "Volume of an item on Steam Market since item's release";
+  
+  const formattedData = data.map(item => ({
+    ...item,
+    date: formatDate(item.date),
+  }));
+
   return (
-    <Card className="w-full">
+    <Card className={`w-full ${className}`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={config}>
+        <ChartContainer config={config} className={`${chartClassName}`}>
           <LineChart
-            data={data}
+            data={formattedData}
             margin={{
               top: 5,
               right: 5,

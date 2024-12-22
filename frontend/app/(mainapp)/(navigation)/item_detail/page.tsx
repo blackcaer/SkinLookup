@@ -1,7 +1,5 @@
 import Link from "next/link";
-import clsx from "clsx";
 import Image from "next/image";
-import { ItemInfo } from "@/app/ui/types";
 import ChartPrice from "@/app/ui/stats/chart-price";
 
 import { demo1, demo2 } from "@/app/ui/demo-data";
@@ -11,8 +9,6 @@ import { ChartConfigVolMed } from "@/app/ui/chart-configs";
 export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
-
-  //const filteredPhsm = item.phsm.map(({ volume, ...rest }) => rest);
 
   return (
     <div>
