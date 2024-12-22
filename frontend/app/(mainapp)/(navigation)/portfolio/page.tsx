@@ -8,14 +8,13 @@ import CardInfo from "@/app/ui/portfolio/card-info";
 export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
-
+{/* max-h-[500px] */}
   return (
     <>
       {/* <div className="flex flex-col lg:flex-row gap-2 justify-center mb-6"> */}
-      <div className="grid lg:grid-cols-4 gap-2 justify-center mb-6">
-        <CardInfo title="Total value" />
-        <ChartPrice data={item.phsm} config={ChartConfigVolMed} className="col-span-2" chartClassName=""/> {/* max-h-[500px] */}
-
+      <div className="grid lg:grid-cols-2 xl:grid-cols-5 gap-2 justify-center mb-6">
+        <CardInfo title="Total value"/>
+        <ChartPrice data={item.phsm} config={ChartConfigVolMed} className="col-span-1 xl:col-span-2" chartClassName=""/> 
         <CardInfo
           title="Total profit"
           description="Total profit in relation to store price"

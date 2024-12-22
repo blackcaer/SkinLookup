@@ -56,13 +56,13 @@ export default function ChartPrice({
   }));
 
   return (
-    <Card className={`w-full ${className}`}>
+    <Card className={`${className}`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="">
-        <ChartContainer config={config} className={`${chartClassName}`}>
+        <ChartContainer config={config} className={`${chartClassName} `}>
           <LineChart
             data={formattedData}
             margin={{
