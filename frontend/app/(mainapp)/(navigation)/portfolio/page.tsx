@@ -4,23 +4,44 @@ import { demo1, demo2 } from "@/app/ui/demo-data";
 import { ChartConfigVolMed } from "@/app/ui/chart-configs";
 import ChartPrice from "@/app/ui/stats/chart-price";
 import CardInfo from "@/app/ui/portfolio/card-info";
+import { AccordionCharts } from "@/app/ui/portfolio/accordion-charts";
 
 export default function Page() {
   const item = demo2;
   item.previewUrl = "/fr_locker.png";
-{/* max-h-[500px] */}
+  {
+    /* max-h-[500px] */
+  }
   return (
     <>
       {/* <div className="flex flex-col lg:flex-row gap-2 justify-center mb-6"> */}
-      <div className="grid lg:grid-cols-2 xl:grid-cols-5 gap-2 justify-center mb-6">
-        <CardInfo title="Total value"/>
-        <ChartPrice data={item.phsm} config={ChartConfigVolMed} className="col-span-1 xl:col-span-2" chartClassName=""/> 
+      {/* lg:grid-cols-2 xl:grid-cols-5 gap-2 */}
+      <div className="flex flex-row justify-center mb-6 gap-4">
+        <CardInfo
+          title="Total value"
+          description="Total value of items in portfolio"
+          content="$ 374.02"
+        />
         <CardInfo
           title="Total profit"
           description="Total profit in relation to store price"
+          content="72%"
         />
-        <CardInfo title="Total items" />
+        <CardInfo
+          title="Weekly value change"
+          description="Weekly value change of your items"
+          content="-1.3%"
+        />
+        <CardInfo
+          title="Total items"
+          description="Total items in portfolio"
+          content="32"
+        />
       </div>
+      <div className="mb-6">
+        <AccordionCharts/>
+      </div>
+
       <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
         <ItemPreview item={item} />
         <ItemPreview item={item} />
