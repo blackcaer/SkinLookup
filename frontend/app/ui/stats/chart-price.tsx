@@ -9,7 +9,6 @@ import {
   YAxis,
   Tooltip as ChartTooltip,
 } from "recharts";
-import { format } from "date-fns";
 
 import {
   Card,
@@ -53,7 +52,7 @@ export default function ChartPrice({
             margin={{
               top: 5,
               right: 5,
-              left: 0,
+              left: -35,
               bottom: 35,
             }}
           >
