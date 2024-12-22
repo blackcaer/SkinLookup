@@ -5,24 +5,23 @@ import Link from "next/link";
 import { ItemInfo } from "@/app/ui/types";
 
 interface ItemPreviewProps {
-    item: ItemInfo;
+  item: ItemInfo;
 }
 
 const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
-
   return (
-    <Link href="/" className="flex flex-col">
-        <Image 
-            src={item.previewUrl || "/default.png"}
-            alt={`${item.name} picture`}
-            className="mr-4 rounded-md"
-            width={220}
-            height={220}
-        />
-        <h2> {item.name} </h2>
-        {/* <p> Collection {item.itemCollection} </p> */}
+    <Link href="/" className="flex flex-col w-[240px]">
+      <Image
+        src={item.previewUrl || "/default.png"}
+        alt={`${item.name} picture`}
+        className="mr-4 rounded-md"
+        width={240}
+        height={240}
+      />
+      <h2 className="break-words text-center"> {item.name} </h2>
+      {/* <p> Collection {item.itemCollection} </p> */}
     </Link>
   );
-}
+};
 
 export default ItemPreview;
