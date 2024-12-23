@@ -8,12 +8,10 @@ import { ChartConfigVolMed } from "@/app/ui/chart-configs";
 
 export default function Page() {
   const item = demo2;
-  item.previewUrl = "/fr_locker.png";
 
   return (
     <div>
       {" "}
-      {/*className="flex flex-col sm:flex-col gap-1 md:overflow-hidden">*/}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-4">
           <Link href="" className="flex flex-row">
