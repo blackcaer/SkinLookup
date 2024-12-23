@@ -1,8 +1,14 @@
+import { ItemInfo } from "../types";
 import CardInfo from "./card-info";
 
-export default function PortfolioHeader() {
+interface PortfolioHeaderProps {
+  itemList: { item: ItemInfo; count: number }[];
+}
+
+export default function PortfolioHeader({itemList}:PortfolioHeaderProps) {
+  const foo = itemList.reduce((sum, currentItem) => sum + currentItem.count, 0);
   return (
-    <>
+    <div className="flex flex-row justify-center mb-6 gap-4">
       <CardInfo
         title="Total value"
         description="Total value of items in portfolio"
@@ -21,8 +27,8 @@ export default function PortfolioHeader() {
       <CardInfo
         title="Total items"
         description="Total items in portfolio"
-        content="32"
+        content={foo.toString()}
       />
-    </>
+    </div>
   );
 }

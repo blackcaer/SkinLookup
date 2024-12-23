@@ -1,15 +1,16 @@
 'use client';
 import React, { useState } from 'react';
-import { ItemInfo } from '@/app/ui/types';
+import { ItemInfo, PItem } from '@/app/ui/types';
 import PortfolioItemPreview from './portfolio-item-preview';
 
+
 interface ItemListProps {
-  p_items: { item: ItemInfo; count: number }[];
+  itemList: { item: ItemInfo; count: number }[];
+  setItemList: React.Dispatch<React.SetStateAction<{ item: ItemInfo; count: number }[]>>;
 }
 
-const ItemList: React.FC<ItemListProps> = ({ p_items: items }) => {
-  const [itemList, setItemList] = useState(items);
-
+const ItemList: React.FC<ItemListProps> = ({ itemList , setItemList }) => {
+  
   const handleRemoveItem = (nameId: number) => {
     setItemList((prevItems) => prevItems.filter((p_items) => p_items.item.nameId !== nameId));
   };
@@ -34,7 +35,7 @@ const ItemList: React.FC<ItemListProps> = ({ p_items: items }) => {
 
   return (
     <div>
-        <div className="text-right pr-6 pb-2 text-lg">{itemList.length} shown items </div>
+        <div className="text-right pr-6 pb-2 text-lg">{itemList.length} shown positions </div>
         <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
             
         {itemList.map(({ item, count }) => (

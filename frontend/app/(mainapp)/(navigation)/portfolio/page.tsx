@@ -1,3 +1,5 @@
+'use client';
+import React, { useState } from 'react';
 import { demo1, demo2 } from "@/app/ui/demo-data";
 import { AccordionCharts } from "@/app/ui/portfolio/accordion-charts";
 import ItemList from "@/app/ui/portfolio/item-list";
@@ -9,23 +11,21 @@ import {PItem} from "@/app/ui/types";
 export default function Page() {
   const items: PItem[] = [
     { item: demo1, count: 1 },
-    { item: demo1, count: 2 },
-    { item: demo1, count: 2 },
-    { item: demo1, count: 2 },
-    { item: demo1, count: 2 },
+    { item: demo2, count: 2 },
   ];
-
+  const [itemList, setItemList] = useState(items);
   return (
     <>
-      <div className="flex flex-row justify-center mb-6 gap-4">
-        <PortfolioHeader />
-      </div>
+      
+        <PortfolioHeader itemList={itemList}/>
+      
       <div className="mb-6">
         <AccordionCharts />
       </div>
 
-      <div >
-        <ItemList p_items={items} />
+      <div>
+        
+        <ItemList itemList={itemList} setItemList={setItemList} />
       </div>
     </>
   );
