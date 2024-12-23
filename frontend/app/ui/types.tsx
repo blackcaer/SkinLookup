@@ -9,3 +9,8 @@ export interface ItemInfo {
     timeAccepted: string;           //
     storePrice: number;             //
 }
+
+export interface PItem {    // Portfolio Item
+    item: ItemInfo;
+    count: number;
+  }
