@@ -33,17 +33,21 @@ const ItemList: React.FC<ItemListProps> = ({ p_items: items }) => {
   };
 
   return (
-    <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
-      {itemList.map(({ item, count }) => (
-        <PortfolioItemPreview
-          key={item.nameId}
-          item={item}
-          count={count}
-          onRemove={() => handleRemoveItem(item.nameId)}
-          onIncrease={() => handleIncreaseItem(item.nameId)}
-          onDecrease={() => handleDecreaseItem(item.nameId)}
-        />
-      ))}
+    <div>
+        <div className="text-right pr-6 pb-2 text-lg">{itemList.length} shown items </div>
+        <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
+            
+        {itemList.map(({ item, count }) => (
+            <PortfolioItemPreview
+            key={item.nameId}
+            item={item}
+            count={count}
+            onRemove={() => handleRemoveItem(item.nameId)}
+            onIncrease={() => handleIncreaseItem(item.nameId)}
+            onDecrease={() => handleDecreaseItem(item.nameId)}
+            />
+        ))}
+        </div>
     </div>
   );
 };
