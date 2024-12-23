@@ -10,10 +10,10 @@ const nextConfig = {
               hostname: 'steamuserimages-a.akamaihd.net',
           },
       ],
+      minimumCacheTTL: 3600
   },
 };
 
 module.exports = nextConfig;
-
 
 export default nextConfig;
