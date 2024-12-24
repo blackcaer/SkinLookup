@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { FC, useState } from "react";
 import Link from "next/link";
-import { ItemInfo } from "@/app/ui/types";
+import { ItemInfo } from "@/app/ui/common/types";
 import {
     PlusIcon,
     MinusIcon,

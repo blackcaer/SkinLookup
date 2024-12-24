@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { ItemInfo, PItem } from '@/app/ui/types';
+import { ItemInfo, PItem } from '@/app/ui/common/types';
 import ItemPreview from '@/app/ui/all/item-preview';
 
 const AllItemList = () => {

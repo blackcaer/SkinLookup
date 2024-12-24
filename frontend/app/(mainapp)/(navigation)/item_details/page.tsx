@@ -1,7 +1,7 @@
 "use client";
 import { demo1, demo2 } from "@/app/ui/demo-data";
 import ChartVolume from "@/app/ui/charts/chart-volume";
-import { ChartConfigVolMed } from "@/app/ui/chart-configs";
+import { ChartConfigVolMed } from "@/app/ui/common/chart-configs";
 import ChartPrice from "@/app/ui/charts/chart-price";
 import SearchBar from "@/app/ui/all/search-bar";
 import ItemDetailHeader from "@/app/ui/item_detail/item-details-header";

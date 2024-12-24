@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ItemInfo } from "@/app/ui/types";
+import { ItemInfo } from "@/app/ui/common/types";
 
 interface ItemDetailHeaderProps {
   item: ItemInfo;

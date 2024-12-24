@@ -6,7 +6,7 @@ import {
   } from "@/components/ui/accordion"
 import ChartPrice from "../charts/chart-price"
 import { demo1, demo2 } from "@/app/ui/demo-data";
-import { ChartConfigVolMed } from "@/app/ui/chart-configs";
+import { ChartConfigVolMed } from "@/app/ui/common/chart-configs";
 import ChartVolume from "../charts/chart-volume";
 
 export function AccordionCharts() {

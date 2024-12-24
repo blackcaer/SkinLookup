@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { ItemInfo, PItem } from '@/app/ui/types';
+import { ItemInfo, PItem } from '@/app/ui/common/types';
 import PortfolioItemPreview from './portfolio-item-preview';
 
 

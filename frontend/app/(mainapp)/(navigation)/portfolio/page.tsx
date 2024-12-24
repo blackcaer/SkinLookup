@@ -6,7 +6,7 @@ import ItemList from "@/app/ui/portfolio/item-list";
 import PortfolioHeader from "@/app/ui/portfolio/portfolio-header";
 import PortfolioItemPreview from "@/app/ui/portfolio/portfolio-item-preview";
 
-import {PItem} from "@/app/ui/types";
+import {PItem} from "@/app/ui/common/types";
 
 export default function Page() {
   const items: PItem[] = [

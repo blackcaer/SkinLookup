@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { FC } from "react";
 import Link from "next/link";
-import { ItemInfo } from "@/app/ui/types";
+import { ItemInfo } from "@/app/ui/common/types";
 import ItemPreviewBase from "./item-preview-base";
 
 interface ItemPreviewProps {
