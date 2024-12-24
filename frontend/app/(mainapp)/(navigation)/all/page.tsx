@@ -1,5 +1,5 @@
 import AllItemList from "@/app/ui/all/all-item-list";
-import SearchBar from "@/app/ui/all/search";
+import SearchBar from "@/app/ui/all/search-bar";
 
 export default function Page() {
 
