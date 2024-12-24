@@ -10,11 +10,11 @@ export default function Page() {
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-6">
         <SearchBar/>
       </div>
       
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-6">
         <ItemDetailHeader item={item} />
 
         <ChartPrice data={item.phsm} config={ChartConfigVolMed} />
