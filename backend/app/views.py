@@ -3,21 +3,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Item
 from .serializers import ItemBasicSerializer, ItemDataSerializer
-from .services import  get_item_data
+from .services import get_item_data, filter_items
 
 @api_view(['GET'])
 def get_all_items(request):
-    items = Item.objects.all()
     name = request.GET.get('name')
     item_type = request.GET.get('itemType')
     item_collection = request.GET.get('itemCollection')
-    if name:
-        items = items.filter(name__icontains=name)
-    if item_collection:
-        items = items.filter(itemCollection__icontains=item_collection)
-    if item_type:
-        items = items.filter(itemType__icontains=item_type)
-
+    items = filter_items(name=name, item_type=item_type, item_collection=item_collection)
     serializer = ItemBasicSerializer(items, many=True)
     return Response(serializer.data)
 
@@ -37,5 +30,5 @@ def get_item_details(request):
 
 @api_view(['GET'])
 def get_matching_results(request, query):
-    items = Item.objects.filter(name__icontains=query).values('name')
-    return Response(list(items))
+    items = filter_items(name=query)
+    return Response(list(items.values('name')))

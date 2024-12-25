@@ -1,13 +1,13 @@
 from datetime import datetime, timedelta
 from .models import Item, ItemData
-from .serializers import ItemSerializer
+from .serializers import ItemFullSerializer
 
 def update_item(item_id, data):
     try:
         item = Item.objects.get(id=item_id)
         item_data, created = ItemData.objects.get_or_create(item=item)
         if item_data.timeRefreshed < datetime.now() - timedelta(days=1):
-            serializer = ItemSerializer(item, data=data, partial=True)
+            serializer = ItemFullSerializer(item, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 update_item_data(item)
@@ -48,3 +48,13 @@ def get_item_data(name=None, name_id=None):
         return item_data
     except Item.DoesNotExist:
         return None
+
+def filter_items(name=None, item_type=None, item_collection=None):
+    items = Item.objects.all()
+    if name:
+        items = items.filter(name__icontains=name)
+    if item_collection:
+        items = items.filter(itemCollection__icontains=item_collection)
+    if item_type:
+        items = items.filter(itemType__icontains=item_type)
+    return items
