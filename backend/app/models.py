@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -14,7 +13,7 @@ class Item(models.Model):
     supplyTotalEstimated = models.IntegerField()
     timeAccepted = models.DateField()
     storePrice = models.FloatField()
-    phsm = JSONField()
+    phsm = models.JSONField()
 
 class ItemData(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE)
@@ -28,3 +27,17 @@ class PortfolioItem(models.Model):
 
 class User(AbstractUser):
     portfolio = models.ManyToManyField(PortfolioItem)
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
