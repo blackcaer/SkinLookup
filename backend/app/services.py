@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from .models import Item, ItemData
 from .serializers import ItemFullSerializer
 
@@ -6,7 +7,7 @@ def update_item(item_id, data):
     try:
         item = Item.objects.get(id=item_id)
         item_data, created = ItemData.objects.get_or_create(item=item)
-        if item_data.timeRefreshed < datetime.now() - timedelta(days=1):
+        if item_data.timeRefreshed < timezone.now() - timedelta(days=1):
             serializer = ItemFullSerializer(item, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
@@ -42,11 +43,13 @@ def _find_item(name=None, name_id=None):
 def get_item_data(name=None, name_id=None):
     try:
         item = _find_item(name=name, name_id=name_id)
+        if item is None:
+            return None
         item_data, created = ItemData.objects.get_or_create(item=item)
-        if item_data.timeRefreshed < datetime.now() - timedelta(days=1):
+        if item_data.timeRefreshed < timezone.now() - timedelta(days=1):
             update_item_data(item)
         return item_data
-    except Item.DoesNotExist:
+    except ItemData.DoesNotExist:
         return None
 
 def filter_items(name=None, item_type=None, item_collection=None):
