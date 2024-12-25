@@ -7,12 +7,11 @@ class ItemFullSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = fields = [
-            'id',
+            'nameId',
             'appId',
             'itemType',
             'itemCollection',
             'name',
-            'nameId',
             'previewUrl',
             'supplyTotalEstimated',
             'timeAccepted',
@@ -25,12 +24,11 @@ class ItemBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = fields = [
-            'id',
+            'nameId',
             'appId',
             'itemType',
             'itemCollection',
             'name',
-            'nameId',
             'previewUrl',
             'supplyTotalEstimated',
             'timeAccepted',
