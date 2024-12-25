@@ -2,9 +2,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Item
-from .serializers import ItemBasicSerializer, ItemDataSerializer
+from rest_framework import status
+from .models import Item, User
+from .serializers import ItemBasicSerializer, ItemDataSerializer, LogoutSerializer, RegisterSerializer
 from .services import get_item_data, filter_items
+from rest_framework import generics
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 @api_view(['GET'])
 def get_all_items(request):
@@ -37,7 +40,20 @@ def get_matching_results(request, query):
     items = filter_items(name=query)
     return Response(list(items.values('name')))
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def is_authenticated_view(request):
-    return Response({"is_authenticated": True})
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+
+class LogoutView(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = LogoutSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            refresh_token = RefreshToken(serializer.validated_data['refresh'])
+            refresh_token.blacklist()
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -13,18 +13,7 @@ const LoginPage: React.FC = () => {
         const checkAuth = async () => {
             const token = localStorage.getItem('access_token');
             if (token) {
-                const response = await fetch('http://127.0.0.1:8000/api/is_authenticated/', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-
-                if (response.ok) {
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
+                setIsAuthenticated(true);
             }
         };
 

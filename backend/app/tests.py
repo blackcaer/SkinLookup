@@ -114,6 +114,7 @@ class PortfolioItemModelTest(TestCase):
 class UserModelTest(TestCase):
 
     def setUp(self):
+        self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.item = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
@@ -141,3 +142,34 @@ class UserModelTest(TestCase):
     def test_user_deletion(self):
         self.user.delete()
         self.assertFalse(User.objects.filter(username='testuser').exists())
+
+    def test_user_login(self):
+        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+
+        # Check if the user is authenticated
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['access'])
+
+    def test_user_login_invalid_credentials(self):
+        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'wrongpassword'})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+
+    def test_user_register(self):
+        response = self.client.post(reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(username='newuser').exists())
+
+    def test_user_logout(self):
+        login_response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'})
+        refresh_token = login_response.data['refresh']
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        logout_response = self.client.post(reverse('logout'), {'refresh': refresh_token})
+        self.assertEqual(logout_response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Ensure the token is blacklisted and cannot be used again
+        response = self.client.post(reverse('token_refresh'), {'refresh': refresh_token})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
