@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Item
 from .serializers import ItemBasicSerializer, ItemDataSerializer
@@ -35,3 +36,8 @@ def get_item_details(request):
 def get_matching_results(request, query):
     items = filter_items(name=query)
     return Response(list(items.values('name')))
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def is_authenticated_view(request):
+    return Response({"is_authenticated": True})
