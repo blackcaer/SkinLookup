@@ -18,8 +18,11 @@ def get_all_items(request):
 def get_item_details(request):
     name_id = request.GET.get('nameId')
     name = request.GET.get('name')
+
     if not name_id and not name:
         return Response({"error": "No identifier provided"}, status=400)
+    if not name_id.isdigit():
+        return Response({"error": "Nameid has to be number"}, status=400)
     
     item_data = get_item_data(name=name, name_id=name_id)
     if item_data:

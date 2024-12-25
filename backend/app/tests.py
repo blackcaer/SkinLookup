@@ -57,6 +57,11 @@ class ItemModelTest(TestCase):
         response = self.client.get(reverse('get_item_details'))
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_get_item_details_invalid_nameid(self):
+        response = self.client.get(reverse('get_item_details'), {'nameId': 'invalid'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], "Nameid has to be number")
+
 class ItemDataModelTest(TestCase):
 
     def setUp(self):
