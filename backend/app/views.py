@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Item
-from .serializers import ItemSerializer
+from .models import Item, ItemData
+from .serializers import ItemSerializer, ItemDataSerializer
+from .services import update_item
 
 @api_view(['GET'])
 def get_all_items(request):
@@ -16,6 +17,7 @@ def get_all_items(request):
         items = items.filter(itemType__icontains=item_type)
     if item_collection:
         items = items.filter(itemCollection__icontains=item_collection)
+
     serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 
