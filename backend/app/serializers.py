@@ -1,10 +1,41 @@
 from rest_framework import serializers
 from .models import Item, ItemData, PortfolioItem, User
 
-class ItemSerializer(serializers.ModelSerializer):
+        
+class ItemFullSerializer(serializers.ModelSerializer):
+    """ Item with phsm """
     class Meta:
         model = Item
-        fields = '__all__'
+        fields = fields = [
+            'id',
+            'appId',
+            'itemType',
+            'itemCollection',
+            'name',
+            'nameId',
+            'previewUrl',
+            'supplyTotalEstimated',
+            'timeAccepted',
+            'storePrice',
+            'phsm'
+        ]
+
+class ItemBasicSerializer(serializers.ModelSerializer):
+    """ Item without phsm """
+    class Meta:
+        model = Item
+        fields = fields = [
+            'id',
+            'appId',
+            'itemType',
+            'itemCollection',
+            'name',
+            'nameId',
+            'previewUrl',
+            'supplyTotalEstimated',
+            'timeAccepted',
+            'storePrice',
+        ]
 
 class ItemDataSerializer(serializers.ModelSerializer):
     class Meta:
