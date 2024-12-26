@@ -1,35 +1,39 @@
-'use client';
-import React, { useState } from 'react';
-import { ItemInfo, PItem } from '@/app/ui/common/types';
-import ItemPreview from '@/app/ui/all/item-preview';
+"use client";
+import React, { useEffect, useState } from "react";
+import { ItemInfo, PItem } from "@/app/ui/common/types";
+import ItemPreview from "@/app/ui/all/item-preview";
 
 const AllItemList = () => {
-    const sampleData = {
-        "id": 6196910726,
-        "appId": 252490,
-        "itemType": "Locker",
-        "itemCollection": "Forest Raiders",
-        "name": "Forest Raiders Locker",
-        "nameId": 176460408,
-        //"previewUrl": "https://steamuserimages-a.akamaihd.net/ugc/2452862891801771581/B96690B4E46626858DF8FD93D59715427CE8267A/",
-        "previewUrl": "/fr_locker.png",
-        "supplyTotalEstimated": 29888,
-        "timeAccepted": "2024-10-03T00:00:00",
-        "storePrice": 2.49
-    }
+  const [items, setItems] = useState<ItemInfo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/items/all/");
+        if (!response.ok) {
+          throw new Error("Failed to fetch items");
+        }
+        const data = await response.json();
+        setItems(data);
+      } catch (error) {
+        setError("Error fetching items");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden">
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
-        <ItemPreview item={sampleData} />
+      {items.map((item) => (
+        <ItemPreview item={item} />
+      ))}
     </div>
   );
 };
