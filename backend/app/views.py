@@ -10,6 +10,11 @@ from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def is_authenticated_view(request):
+    return Response({"detail": "User is authenticated"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
 def get_all_items(request):
     name = request.GET.get('name')
     item_type = request.GET.get('itemType')
@@ -54,6 +59,6 @@ class LogoutView(generics.GenericAPIView):
         try:
             refresh_token = RefreshToken(serializer.validated_data['refresh'])
             refresh_token.blacklist()
-        except Exception as e:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception:
+            return Response({"detail": "Failed to blacklist token."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail": "Logout successful."}, status=status.HTTP_204_NO_CONTENT)
