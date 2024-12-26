@@ -1,22 +1,17 @@
 from rest_framework import serializers
 from .models import Item, ItemData, PortfolioItem, User
 from rest_framework_simplejwt.tokens import RefreshToken
-        
+
+class CustomDateField(serializers.DateField):
+    def to_representation(self, value):
+        return value.strftime('%d/%m/%Y')
+
 class ItemSerializer(serializers.ModelSerializer):
-    """ Item without phsm """
+    timeAccepted = CustomDateField()
+
     class Meta:
         model = Item
-        fields = [
-            'nameId',
-            'appId',
-            'itemType',
-            'itemCollection',
-            'name',
-            'previewUrl',
-            'supplyTotalEstimated',
-            'timeAccepted',
-            'storePrice',
-        ]
+        fields = '__all__'
 
 class ItemDataSerializer(serializers.ModelSerializer):
     class Meta:
