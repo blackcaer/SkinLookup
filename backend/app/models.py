@@ -77,8 +77,13 @@ class ItemData(models.Model):
             if not isinstance(entry['volume'], int):
                 raise ValidationError("Each entry's 'volume' must be an integer")
 
-    def update_data(self, new_phsm):
-        self.validate_phsm(new_phsm)
+    def update_data(self):
+        new_phsm = [{
+                "date": "10/10/2024",
+                "median": 2.73,
+                "volume": 57
+            }]#self.get_new_phsm()
+        #self.validate_phsm(new_phsm)
         self.phsm = new_phsm
         self.timeRefreshed = timezone.now()
         self.priceWeekAgo = self.get_week_ago_price()

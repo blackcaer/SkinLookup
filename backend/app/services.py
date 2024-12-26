@@ -1,17 +1,13 @@
 from .models import Item, ItemData
 from .serializers import ItemSerializer
 
-def update_item(nameId, data):
+def update_item(nameId):
     try:
         item = Item.objects.get(nameId=nameId)
         item_data, created = ItemData.objects.get_or_create(item=item)
         if item_data.is_older_than(hours=24):
-            serializer = ItemSerializer(item, data=data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                item_data.update_data()
-                return {"status": "success", "data": serializer.data}
-            return {"status": "error", "errors": serializer.errors}
+            item_data.update_data()
+            return {"status": "success", "data": item_data}
         else:
             return {"status": "up_to_date", "message": "Item is up to date"}
     except Item.DoesNotExist:

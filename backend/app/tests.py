@@ -214,15 +214,10 @@ class ServicesTest(TestCase):
         )
 
     def test_update_item(self):
-        data = {
-            'name': 'Updated Locker',
-            'storePrice': 3.00
-        }
-        result = update_item(self.item.nameId, data)
+        result = update_item(self.item.nameId)
         self.assertEqual(result['status'], 'success')
-        self.item.refresh_from_db()
-        self.assertEqual(self.item.name, 'Updated Locker')
-        self.assertEqual(self.item.storePrice, 3.00)
+        self.item_data.refresh_from_db()
+        self.assertEqual(self.item_data.priceNow, 3.50)
 
     def test_get_item_data(self):
         item_data = get_item_data(name_id=1)
