@@ -218,7 +218,7 @@ class ServicesTest(TestCase):
             'name': 'Updated Locker',
             'storePrice': 3.00
         }
-        result = update_item(self.item.id, data)
+        result = update_item(self.item.nameId, data)
         self.assertEqual(result['status'], 'success')
         self.item.refresh_from_db()
         self.assertEqual(self.item.name, 'Updated Locker')
