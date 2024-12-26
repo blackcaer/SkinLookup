@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Item, User
-from .serializers import ItemBasicSerializer, ItemDataSerializer, LogoutSerializer, RegisterSerializer
+from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, RegisterSerializer
 from .services import get_item_data, filter_items
 from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
@@ -20,7 +20,7 @@ def get_all_items(request):
     item_type = request.GET.get('itemType')
     item_collection = request.GET.get('itemCollection')
     items = filter_items(name=name, item_type=item_type, item_collection=item_collection)
-    serializer = ItemBasicSerializer(items, many=True)
+    serializer = ItemSerializer(items, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])

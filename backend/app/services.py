@@ -1,14 +1,14 @@
 from datetime import timedelta
 from django.utils import timezone
 from .models import Item, ItemData
-from .serializers import ItemFullSerializer
+from .serializers import ItemSerializer
 
 def update_item(item_id, data):
     try:
         item = Item.objects.get(id=item_id)
         item_data, created = ItemData.objects.get_or_create(item=item)
-        if item_data.timeRefreshed < timezone.now() - timedelta(days=1):
-            serializer = ItemFullSerializer(item, data=data, partial=True)
+        if item_data.is_older_than(hours=24):
+            serializer = ItemSerializer(item, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 update_item_data(item)
@@ -39,14 +39,13 @@ def _find_item(name=None, name_id=None):
     except Item.DoesNotExist:
         return None
 
-
 def get_item_data(name=None, name_id=None):
     try:
         item = _find_item(name=name, name_id=name_id)
         if item is None:
             return None
         item_data, created = ItemData.objects.get_or_create(item=item)
-        if item_data.timeRefreshed < timezone.now() - timedelta(days=1):
+        if item_data.is_older_than(hours=24):
             update_item_data(item)
         return item_data
     except ItemData.DoesNotExist:

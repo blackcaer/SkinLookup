@@ -1,8 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
+from datetime import timedelta
 from .models import Item, ItemData, PortfolioItem, User
+from .services import update_item, get_item_data, filter_items
 
 class ItemModelTest(TestCase):
     def setUp(self):
@@ -10,14 +13,12 @@ class ItemModelTest(TestCase):
         self.item1 = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
-            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item2 = Item.objects.create(
             nameId=2, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker 2", previewUrl="https://example.com/2",
-            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
 
     def test_item_creation(self):
@@ -37,8 +38,7 @@ class ItemModelTest(TestCase):
             Item.objects.create(
                 nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
                 name="Duplicate Locker", previewUrl="https://example.com/3",
-                supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-                phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+                supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
             )
 
     def test_get_all_items(self):
@@ -68,11 +68,12 @@ class ItemDataModelTest(TestCase):
         self.item = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
-            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75
+            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
+            timeRefreshed=timezone.now()
         )
 
     def test_item_data_creation(self):
@@ -85,17 +86,32 @@ class ItemDataModelTest(TestCase):
         self.item_data.delete()
         self.assertFalse(ItemData.objects.filter(item=self.item).exists())
 
+    def test_is_older_than(self):
+        self.item_data.timeRefreshed = timezone.now() - timedelta(hours=25)
+        self.item_data.save()
+        self.assertTrue(self.item_data.is_older_than(hours=24))
+
+        self.item_data.timeRefreshed = timezone.now() - timedelta(hours=23)
+        self.item_data.save()
+        self.assertFalse(self.item_data.is_older_than(hours=24))
+
+        self.item_data.timeRefreshed = None
+        self.item_data.save()
+        self.assertTrue(self.item_data.is_older_than(hours=24))
+        self.assertTrue(self.item_data.is_older_than(hours=0))
+
 class PortfolioItemModelTest(TestCase):
 
     def setUp(self):
         self.item = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
-            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75
+            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
+            timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
             itemData=self.item_data, count=5
@@ -119,11 +135,12 @@ class UserModelTest(TestCase):
         self.item = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
-            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49,
-            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}]
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75
+            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
+            timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
             itemData=self.item_data, count=5
@@ -151,6 +168,9 @@ class UserModelTest(TestCase):
 
         # Check if the user is authenticated
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['access'])
+        auth_response = self.client.get(reverse('is_authenticated'))
+        self.assertEqual(auth_response.status_code, status.HTTP_200_OK)
+        self.assertTrue(auth_response.data['detail'] == "User is authenticated")
 
     def test_user_login_invalid_credentials(self):
         response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'wrongpassword'})
@@ -173,3 +193,43 @@ class UserModelTest(TestCase):
         response = self.client.post(reverse('token_refresh'), {'refresh': refresh_token})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('detail', response.data)
+
+        # Check if the user is logged out
+        self.client.credentials()
+        auth_response = self.client.get(reverse('is_authenticated'))
+        self.assertEqual(auth_response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+class ServicesTest(TestCase):
+
+    def setUp(self):
+        self.item = Item.objects.create(
+            nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            name="Forest Raiders Locker", previewUrl="https://example.com/1",
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        self.item_data = ItemData.objects.create(
+            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
+            timeRefreshed=timezone.now() - timedelta(days=2)
+        )
+
+    def test_update_item(self):
+        data = {
+            'name': 'Updated Locker',
+            'storePrice': 3.00
+        }
+        result = update_item(self.item.id, data)
+        self.assertEqual(result['status'], 'success')
+        self.item.refresh_from_db()
+        self.assertEqual(self.item.name, 'Updated Locker')
+        self.assertEqual(self.item.storePrice, 3.00)
+
+    def test_get_item_data(self):
+        item_data = get_item_data(name_id=1)
+        self.assertIsNotNone(item_data)
+        self.assertEqual(item_data.item.name, 'Forest Raiders Locker')
+
+    def test_filter_items(self):
+        items = filter_items(name='Forest Raiders')
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].name, 'Forest Raiders Locker')
