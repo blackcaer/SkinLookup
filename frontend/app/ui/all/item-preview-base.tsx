@@ -22,7 +22,7 @@ export default function ItemPreviewBase({ item }: ItemPreviewBaseProps) {
 
     return (
         <>
-            <Link href="/item_details">
+            <Link href={`/item_details?name=${item.name}`}>
                 {isLoading && <Skeleton height={240} width={240} className="absolute top-0 left-0 rounded-md" />}
                 <Image
                     src={item.previewUrl || "/default.png"}
