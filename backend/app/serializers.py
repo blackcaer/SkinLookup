@@ -2,28 +2,11 @@ from rest_framework import serializers
 from .models import Item, ItemData, PortfolioItem, User
 from rest_framework_simplejwt.tokens import RefreshToken
         
-class ItemFullSerializer(serializers.ModelSerializer):
-    """ Item with phsm """
-    class Meta:
-        model = Item
-        fields = fields = [
-            'nameId',
-            'appId',
-            'itemType',
-            'itemCollection',
-            'name',
-            'previewUrl',
-            'supplyTotalEstimated',
-            'timeAccepted',
-            'storePrice',
-            'phsm'
-        ]
-
-class ItemBasicSerializer(serializers.ModelSerializer):
+class ItemSerializer(serializers.ModelSerializer):
     """ Item without phsm """
     class Meta:
         model = Item
-        fields = fields = [
+        fields = [
             'nameId',
             'appId',
             'itemType',
