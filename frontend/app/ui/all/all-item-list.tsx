@@ -59,7 +59,7 @@ const AllItemList = () => {
   };
 
   return (
-    <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden">
+    <div className="flex flex-wrap flex-row gap-4 justify-center">
       {currentItems.map((item) => (
         <ItemPreview key={item.nameId} item={item} />
       ))}
