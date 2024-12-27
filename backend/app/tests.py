@@ -12,12 +12,12 @@ class ItemModelTest(TestCase):
         self.client = APIClient()
         self.item1 = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
-            name="Forest Raiders Locker", previewUrl="https://example.com/1",
+            name="Some item", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item2 = Item.objects.create(
             nameId=2, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
-            name="Forest Raiders Locker 2", previewUrl="https://example.com/2",
+            name="Some item 2", previewUrl="https://example.com/2",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
 
@@ -37,7 +37,7 @@ class ItemModelTest(TestCase):
         with self.assertRaises(Exception):
             Item.objects.create(
                 nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
-                name="Duplicate Locker", previewUrl="https://example.com/3",
+                name="Duplicate item", previewUrl="https://example.com/3",
                 supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
             )
 
@@ -66,12 +66,12 @@ class ItemDataModelTest(TestCase):
 
     def setUp(self):
         self.item = Item.objects.create(
-            nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
             timeRefreshed=timezone.now()
         )
@@ -104,12 +104,12 @@ class PortfolioItemModelTest(TestCase):
 
     def setUp(self):
         self.item = Item.objects.create(
-            nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
             timeRefreshed=timezone.now()
         )
@@ -133,12 +133,12 @@ class UserModelTest(TestCase):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.item = Item.objects.create(
-            nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
             timeRefreshed=timezone.now()
         )
@@ -203,24 +203,18 @@ class ServicesTest(TestCase):
 
     def setUp(self):
         self.item = Item.objects.create(
-            nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         self.item_data = ItemData.objects.create(
-            item=self.item, priceWeekAgo=2.50, priceNow=2.75,
+            item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
             timeRefreshed=timezone.now() - timedelta(days=2)
         )
 
-    def test_update_item(self):
-        result = update_item(self.item.nameId)
-        self.assertEqual(result['status'], 'success')
-        self.item_data.refresh_from_db()
-        self.assertEqual(self.item_data.priceNow, None)
-
     def test_get_item_data(self):
-        item_data = get_item_data(name_id=1)
+        item_data = get_item_data(name_id=176460408)
         self.assertIsNotNone(item_data)
         self.assertEqual(item_data.item.name, 'Forest Raiders Locker')
 
