@@ -14,16 +14,13 @@ def update_item(nameId):
         return {"status": "error", "message": "Item not found"}
 
 def get_item_data(name=None, name_id=None):
-    try:
-        item = Item.find_item(name=name, name_id=name_id)
-        if item is None:
-            return None
-        item_data, created = ItemData.objects.get_or_create(item=item)
-        if item_data.is_older_than(hours=24):
-            item_data.update_data()
-        return item_data
-    except ItemData.DoesNotExist:
+    item = Item.find_item(name=name, name_id=name_id)
+    if item is None:
         return None
+    item_data, created = ItemData.objects.get_or_create(item=item)
+    if item_data.is_older_than(hours=24):
+        item_data.update_data()
+    return item_data
 
 def filter_items(name=None, item_type=None, item_collection=None):
     items = Item.objects.all()

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
 from django.core.exceptions import ValidationError
-
+import requests
 # Create your models here.
 
 class Item(models.Model):
@@ -37,10 +37,10 @@ from datetime import timedelta
 
 class ItemData(models.Model):
     item = models.OneToOneField(Item, primary_key=True, on_delete=models.CASCADE)
-    timeRefreshed = models.DateTimeField(null=True)
-    priceWeekAgo = models.FloatField(null=True)
-    priceNow = models.FloatField(null=True)
-    phsm = models.JSONField(null=True)
+    timeRefreshed = models.DateTimeField(null=True,blank=True)
+    priceWeekAgo = models.FloatField(null=True,blank=True)
+    priceNow = models.FloatField(null=True,blank=True)
+    phsm = models.JSONField(null=True,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.priceNow:
@@ -49,15 +49,13 @@ class ItemData(models.Model):
         super().save(*args, **kwargs)
 
     def get_current_price(self):
-        # Example data fetching logic
-        return 3.50 
+        return None
     
     def get_week_ago_price(self):
-        # Example data fetching logic
-        return 3.50 
+        return None
 
     def is_older_than(self, hours=24):
-        if self.timeRefreshed is None:
+        if self.timeRefreshed is None or self.phsm is None:
             return True
         return self.timeRefreshed < timezone.now() - timedelta(hours=hours)
 
@@ -76,15 +74,28 @@ class ItemData(models.Model):
                 raise ValidationError("Each entry's 'median' must be a number")
             if not isinstance(entry['volume'], int):
                 raise ValidationError("Each entry's 'volume' must be an integer")
+    
+    def _get_phsm_from_api(self,max_days_phsm=7):
+        url = f"https://rust.scmm.app/api/item/{self.item.name}/sales?maxDays={max_days_phsm}&ochl=false"
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            response.raise_for_status()
 
     def update_data(self):
-        new_phsm = [{
+        """new_phsm = [{
                 "date": "10/10/2024",
-                "median": 2.73,
+                "median": 1.23,
                 "volume": 57
-            }]#self.get_new_phsm()
+            }]"""#self.get_new_phsm()
         #self.validate_phsm(new_phsm)
-        self.phsm = new_phsm
+        #https://rust.scmm.app/api/item/Press%20Vest/sales?maxDays=7&ochl=false
+        try:
+            self.phsm = self._get_phsm_from_api()
+        except requests.HTTPError as e:
+            print("Error getting phsm for {self.item.name}: ",e)
+            return
         self.timeRefreshed = timezone.now()
         self.priceWeekAgo = self.get_week_ago_price()
         self.priceNow = self.get_current_price()

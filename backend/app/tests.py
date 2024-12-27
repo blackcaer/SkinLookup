@@ -217,7 +217,7 @@ class ServicesTest(TestCase):
         result = update_item(self.item.nameId)
         self.assertEqual(result['status'], 'success')
         self.item_data.refresh_from_db()
-        self.assertEqual(self.item_data.priceNow, 3.50)
+        self.assertEqual(self.item_data.priceNow, None)
 
     def test_get_item_data(self):
         item_data = get_item_data(name_id=1)

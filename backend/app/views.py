@@ -30,7 +30,7 @@ def get_item_details(request):
 
     if not name_id and not name:
         return Response({"error": "No identifier provided"}, status=400)
-    if not name_id.isdigit():
+    elif name_id and not name_id.isdigit():
         return Response({"error": "Nameid has to be number"}, status=400)
     
     item_data = get_item_data(name=name, name_id=name_id)
@@ -38,7 +38,7 @@ def get_item_details(request):
         serializer = ItemDataSerializer(item_data)
         return Response(serializer.data)
     else:
-        return Response({"error": "Item data not found"}, status=404)
+        return Response({"error": "Item not found"}, status=404)
 
 @api_view(['GET'])
 def get_matching_results(request, query):
