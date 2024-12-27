@@ -79,11 +79,16 @@ class ItemData(models.Model):
             return True
         return self.timeRefreshed < timezone.now() - timedelta(hours=hours)
     
-    def _get_phsm_from_api(self,max_days_phsm=7):
+    def _get_phsm_from_api(self, max_days_phsm=7):
         url = f"https://rust.scmm.app/api/item/{self.item.name}/sales?maxDays={max_days_phsm}&ochl=false"
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json()
+            data = response.json()
+            filtered_data = [
+                {"date": entry["date"], "median": entry["median"], "volume": entry["volume"]}
+                for entry in data
+            ]
+            return filtered_data
         else:
             response.raise_for_status()
 
@@ -91,7 +96,7 @@ class ItemData(models.Model):
         try:
             self.phsm = self._get_phsm_from_api()
         except requests.HTTPError as e:
-            print("Error getting phsm for {self.item.name}: ",e)
+            print(f"Error getting phsm for {self.item.name}: ", e)
             return
         self.timeRefreshed = timezone.now()
         self.save()

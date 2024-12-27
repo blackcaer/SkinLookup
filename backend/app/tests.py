@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from datetime import timedelta
 from .models import Item, ItemData, PortfolioItem, User
-from .services import update_item, get_item_data, filter_items
+from .services import get_item_data, filter_items
 
 class ItemModelTest(TestCase):
     def setUp(self):
@@ -14,6 +14,13 @@ class ItemModelTest(TestCase):
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Some item", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        phsm_data = [
+            {"date": "2024-10-03", "median": 2.50, "volume": 50},
+            {"date": "2024-10-10", "median": 2.75, "volume": 57}
+        ]
+        self.item1data = ItemData.objects.create(
+            item=self.item1, phsm=phsm_data, timeRefreshed=timezone.now()
         )
         self.item2 = Item.objects.create(
             nameId=2, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
@@ -99,6 +106,49 @@ class ItemDataModelTest(TestCase):
         self.item_data.save()
         self.assertTrue(self.item_data.is_older_than(hours=24))
         self.assertTrue(self.item_data.is_older_than(hours=0))
+
+    def test_price_fields_update_on_creation(self):
+        item = Item.objects.create(
+            nameId=176460409, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            name="Forest Raiders Locker 2", previewUrl="https://example.com/2",
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        phsm_data = [
+            {"date": "2024-10-03", "median": 2.50, "volume": 50},
+            {"date": "2024-10-10", "median": 2.75, "volume": 57}
+        ]
+        item_data = ItemData.objects.create(
+            item=item, phsm=phsm_data, timeRefreshed=timezone.now()
+        )
+        self.assertEqual(item_data.price_newest, 2.75)
+        self.assertEqual(item_data.price_week_ago, 2.50)
+
+    def test_price_fields_update_with_insufficient_data(self):
+        item = Item.objects.create(
+            nameId=176460410, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            name="Forest Raiders Locker 3", previewUrl="https://example.com/3",
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        phsm_data = [
+            {"date": "2024-10-10", "median": 2.75, "volume": 57}
+        ]
+        item_data = ItemData.objects.create(
+            item=item, phsm=phsm_data, timeRefreshed=timezone.now()
+        )
+        self.assertEqual(item_data.price_newest, 2.75)
+        self.assertEqual(item_data.price_week_ago, 2.75)
+
+    def test_price_fields_update_with_no_phsm(self):
+        item = Item.objects.create(
+            nameId=176460411, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            name="Forest Raiders Locker 4", previewUrl="https://example.com/4",
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        item_data = ItemData.objects.create(
+            item=item, phsm=[], timeRefreshed=timezone.now()
+        )
+        self.assertIsNone(item_data.price_newest)
+        self.assertIsNone(item_data.price_week_ago)
 
 class PortfolioItemModelTest(TestCase):
 
