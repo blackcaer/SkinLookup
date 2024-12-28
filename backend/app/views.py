@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -7,7 +8,8 @@ from .models import Item, User, ItemData, PortfolioItem
 from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, PortfolioItemSerializer, RegisterSerializer
 from .services import get_item_data, filter_items
 from rest_framework import generics
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+
+logger = logging.getLogger('django')
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -23,6 +25,9 @@ def get_all_items(request):
     serializer = ItemSerializer(items, many=True)
 
     portfolio_items = []
+
+    logger.debug("Is user authenticated: ",request.user.is_authenticated)
+
     if request.user.is_authenticated:
         portfolio_items = (
             request.user.portfolio.all()
