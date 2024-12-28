@@ -12,28 +12,29 @@ import ItemPreviewBase from "../all/item-preview-base";
 interface PortfolioItemPreviewProps {
   item: ItemInfo;
   count?: number;
-  onRemove: () => void;
-  onIncrease: () => void;
-  onDecrease: () => void;
+  onChangeCount: (count:number) => void;
 }
 
-const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onRemove, onIncrease, onDecrease }) => {
+const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onChangeCount }) => {
   const [itemCount, setItemCount] = useState(count || 1);
 
   const handleIncrease = () => {
-    setItemCount(itemCount + 1);
-    onIncrease();
+    const newCount = itemCount + 1;
+    setItemCount(newCount);
+    onChangeCount(newCount);
   };
 
   const handleDecrease = () => {
     if (itemCount > 1) {
-      setItemCount(itemCount - 1);
-      onDecrease();
+      const newCount = itemCount - 1;
+      setItemCount(newCount);
+      onChangeCount(newCount);
     }
   };
 
   const handleDelete = () => {
-    onRemove();
+    onChangeCount(0);
+    setItemCount(0);
   };
 
   const formattedItemName = `${item.name} x${itemCount}`;
