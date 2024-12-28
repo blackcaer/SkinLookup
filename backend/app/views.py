@@ -41,9 +41,10 @@ def get_item_details(request):
         return Response({"error": "Item not found"}, status=404)
 
 @api_view(['GET'])
-def get_matching_results(request, query):
+def get_matching_names(request, query):
     items = filter_items(name=query)
-    return Response(list(items.values('name')))
+    names = [item['name'] for item in items.values('name')[:10]]
+    return Response(names)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
