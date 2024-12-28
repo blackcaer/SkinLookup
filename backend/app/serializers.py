@@ -23,7 +23,7 @@ class PortfolioItemSerializer(serializers.ModelSerializer):
     item_data = ItemDataSerializer()
     class Meta:
         model = PortfolioItem
-        fields = '__all__'
+        fields = ['item_data','count']
 
 class UserSerializer(serializers.ModelSerializer):
     portfolio = PortfolioItemSerializer(many=True, read_only=True)

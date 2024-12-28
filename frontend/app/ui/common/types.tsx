@@ -11,7 +11,7 @@ export interface ItemInfo {
 }
 
 export interface PItem {    // Portfolio Item
-    item: ItemInfo;
+    itemData: ItemData;
     count: number;
   }
 
