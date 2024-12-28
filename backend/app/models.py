@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import requests
 
 MAX_DAYS_PHSM = 30  # Max days of price history to fetched from api. -1 means all data
-
+ITEMDATA_EXPIRATION_HOURS = 24
 
 class Item(models.Model):
     nameId = models.IntegerField(primary_key=True, unique=True)
@@ -92,7 +92,7 @@ class ItemData(models.Model):
             return True
         return self.timeRefreshed < timezone.now() - timedelta(hours=hours)
 
-    def update_data(self):
+    def force_update_data(self):
         try:
             self.phsm = self._get_phsm_from_api(max_days_phsm=MAX_DAYS_PHSM)
         except requests.HTTPError as e:
@@ -103,6 +103,16 @@ class ItemData(models.Model):
 
     def __str__(self):
         return f"{self.item.name} - {self.price_newest}"
+    
+    def update_item(self):
+        try:
+            if self.is_older_than(hours=ITEMDATA_EXPIRATION_HOURS):
+                self.force_update_data()
+                return {"status": 204, "message": "Item has been updated"}
+            else:
+                return {"status": 304, "message": "Item is up to date"}
+        except requests.HTTPError:
+            return {"status": 500, "message": "HTTPError while updating item data"}
 
 
 class PortfolioItem(models.Model):

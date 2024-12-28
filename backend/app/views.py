@@ -77,7 +77,7 @@ def set_portfolio_item_count(request):
 
     item_data, created = ItemData.objects.get_or_create(item=item)
 
-    item_data.update_data()
+    item_data.force_update_data()
 
     if count == 0:
         PortfolioItem.objects.filter(user=request.user, item_data=item_data).delete()
