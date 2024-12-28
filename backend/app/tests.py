@@ -151,8 +151,8 @@ class ItemDataModelTest(TestCase):
         self.assertIsNone(item_data.price_week_ago)
 
 class PortfolioItemModelTest(TestCase):
-
     def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
         self.item = Item.objects.create(
             nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
@@ -164,7 +164,7 @@ class PortfolioItemModelTest(TestCase):
             timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
-            item_data=self.item_data, count=5
+            user=self.user, item_data=self.item_data, count=5
         )
 
     def test_portfolio_item_creation(self):
@@ -178,7 +178,6 @@ class PortfolioItemModelTest(TestCase):
         self.assertFalse(PortfolioItem.objects.filter(item_data=self.item_data).exists())
 
 class UserModelTest(TestCase):
-
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='12345')
@@ -193,9 +192,8 @@ class UserModelTest(TestCase):
             timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
-            item_data=self.item_data, count=5
+            user=self.user, item_data=self.item_data, count=5
         )
-        self.user.portfolio.add(self.portfolio_item)
 
     def test_user_creation(self):
         self.assertEqual(User.objects.count(), 1)

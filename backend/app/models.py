@@ -112,7 +112,6 @@ class PortfolioItem(models.Model):
         return f"{self.item_data.item.name} - {self.count}"
 
 class User(AbstractUser):
-    portfolio = models.ManyToManyField(PortfolioItem, related_name='related_user', blank=True)
 
     def __str__(self):
         return self.username
