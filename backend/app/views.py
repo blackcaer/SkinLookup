@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Item, User
-from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, RegisterSerializer
+from .models import Item, User, ItemData, PortfolioItem
+from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, PortfolioItemSerializer, RegisterSerializer
 from .services import get_item_data, filter_items
 from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
@@ -45,6 +45,50 @@ def get_matching_names(request, query):
     items = filter_items(name=query)
     names = [item['name'] for item in items.values('name')[:10]]
     return Response(names)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_portfolio(request):
+    portfolio = request.user.portfolio.all()
+    serialized_portfolio = PortfolioItemSerializer(portfolio, many=True)
+    return Response(serialized_portfolio.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def set_portfolio_item_count(request):
+    name = request.data.get('name')
+    count = request.data.get('count')
+
+    if not name or count is None:
+        return Response({"error": "Name and count are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        count = int(count)
+    except ValueError:
+        return Response({"error": "Count must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if count < 0:
+        count = 0
+        
+    try:
+        item = Item.objects.get(name=name)
+    except Item.DoesNotExist:
+        return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    item_data, created = ItemData.objects.get_or_create(item=item)
+
+    item_data.update_data()
+
+    if count == 0:
+        PortfolioItem.objects.filter(user=request.user, item_data=item_data).delete()
+        return Response({"message": "Portfolio item deleted"}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        portfolio_item, created = PortfolioItem.objects.update_or_create(
+            user=request.user,
+            item_data=item_data,
+            defaults={'count': count}
+        )
+        return Response({"message": "Portfolio item updated"}, status=status.HTTP_200_OK)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
