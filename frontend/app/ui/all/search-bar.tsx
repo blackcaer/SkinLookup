@@ -60,6 +60,7 @@ export default function SearchBar() {
       <Input
         id="search_bar"
         onInput={handleSearch}
+        autoComplete="off"
         className={clsx(
           "sm:text-md md:text-lg w-full h-14 placeholder:opacity-80 border-x-2 border-t-2 ",
           searchResults.length > 0
@@ -78,6 +79,7 @@ export default function SearchBar() {
                 onClick={() => {
                   setSearchResults([]);
                 }}
+                className="block"
               >
                 {result}
               </Link>

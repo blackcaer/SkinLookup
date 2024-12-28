@@ -33,9 +33,8 @@ const ItemDetailsPage = () => {
           console.log(data);
           setItemData(data);
         } else {
-          console.log("Response bad");
           console.log(
-            `Error fetching item data: ${response.statusText} (${response.status})`
+            `Bad status code: ${response.statusText} (${response.status})`
           );
         }
       } catch (error) {

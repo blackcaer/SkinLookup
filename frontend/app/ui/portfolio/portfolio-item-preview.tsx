@@ -1,8 +1,6 @@
 'use client';
     
-import Image from "next/image";
 import { FC, useState } from "react";
-import Link from "next/link";
 import { ItemInfo } from "@/app/ui/common/types";
 import {
     PlusIcon,
@@ -11,7 +9,7 @@ import {
   } from "@heroicons/react/24/outline";
 import ItemPreviewBase from "../all/item-preview-base";
 
-interface ItemPreviewProps {
+interface PortfolioItemPreviewProps {
   item: ItemInfo;
   count?: number;
   onRemove: () => void;
@@ -19,7 +17,7 @@ interface ItemPreviewProps {
   onDecrease: () => void;
 }
 
-const ItemPreview: FC<ItemPreviewProps> = ({ item, count, onRemove, onIncrease, onDecrease }) => {
+const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onRemove, onIncrease, onDecrease }) => {
   const [itemCount, setItemCount] = useState(count || 1);
 
   const handleIncrease = () => {
@@ -57,4 +55,4 @@ const ItemPreview: FC<ItemPreviewProps> = ({ item, count, onRemove, onIncrease, 
   );
 };
 
-export default ItemPreview;
+export default PortfolioItemPreview;
