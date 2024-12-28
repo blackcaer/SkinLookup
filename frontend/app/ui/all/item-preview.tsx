@@ -1,17 +1,34 @@
-import Image from "next/image";
-import { FC } from "react";
-import Link from "next/link";
+import { FC, useState } from "react";
 import { ItemInfo } from "@/app/ui/common/types";
 import ItemPreviewBase from "./item-preview-base";
+import { PlusIcon,CheckIcon } from "@heroicons/react/24/outline";
 
 interface ItemPreviewProps {
   item: ItemInfo;
+  inPortfolio: boolean;
+  isLoggedIn:boolean;
 }
 
-const ItemPreview: FC<ItemPreviewProps> = ({ item }) => {
+const ItemPreview: FC<ItemPreviewProps> = ({ item,inPortfolio,isLoggedIn }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInPortfolio, setIsInPortfolio] = useState(inPortfolio);
+
   return (
-    <div className="flex flex-col w-[240px] h-[300px] border border-gray-300 rounded-lg shadow-lg">
-      <ItemPreviewBase item={item}/>
+    <div
+      className="relative flex flex-col w-[240px] h-[300px] border border-gray-300 rounded-lg shadow-lg"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <ItemPreviewBase item={item} />
+      {isHovered && isLoggedIn && (
+        <div className="absolute top-2 right-2" onClick={()=>setIsInPortfolio(!isInPortfolio)}>
+          {isInPortfolio?
+          <CheckIcon className="w-8 h-8 text-white-700" />:
+          <PlusIcon className="w-8 h-8 text-white-700" />
+          }
+            
+        </div>
+      )}
     </div>
   );
 };
