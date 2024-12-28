@@ -270,3 +270,90 @@ class ServicesTest(TestCase):
         items = filter_items(name='Forest Raiders')
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].name, 'Forest Raiders Locker')
+
+class ViewsTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.item = Item.objects.create(
+            nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
+            name="Forest Raiders Locker", previewUrl="https://example.com/1",
+            supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
+        )
+        self.item_data = ItemData.objects.create(
+            item=self.item, price_week_ago=2.50, price_newest=2.75,
+            phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
+            timeRefreshed=timezone.now()
+        )
+        self.portfolio_item = PortfolioItem.objects.create(
+            user=self.user, item_data=self.item_data, count=5
+        )
+        self.token = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'}).data['access']
+
+    def test_get_all_items_unauthenticated(self):
+        response = self.client.get(reverse('get_all_items'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('items', response.data)
+        self.assertIn('names_in_portfolio', response.data)
+        self.assertEqual(response.data['names_in_portfolio'], [])
+
+    def test_get_all_items_authenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.get(reverse('get_all_items'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('items', response.data)
+        self.assertIn('names_in_portfolio', response.data)
+        self.assertEqual(response.data['names_in_portfolio'], ['Forest Raiders Locker'])
+
+    def test_get_item_details_unauthenticated(self):
+        response = self.client.get(reverse('get_item_details'), {'nameId': 176460408})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('item', response.data)
+        self.assertIn('is_in_portfolio', response.data)
+        self.assertFalse(response.data['is_in_portfolio'])
+
+    def test_get_item_details_authenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.get(reverse('get_item_details'), {'nameId': 176460408})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('item', response.data)
+        if response.data['item']:
+            item_data = response.data['item']
+            self.assertIn('item', item_data)
+            self.assertIn('price_week_ago', item_data)
+            self.assertIn('price_newest', item_data)
+            self.assertIn('phsm', item_data)
+            self.assertIn('item', item_data)
+
+        self.assertIn('is_in_portfolio', response.data)
+        self.assertTrue(response.data['is_in_portfolio'])
+
+    def test_get_user_portfolio_unauthenticated(self):
+        response = self.client.get(reverse('get_user_portfolio'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_user_portfolio_authenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.get(reverse('get_user_portfolio'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['item_data']['item']['name'], 'Forest Raiders Locker')
+        self.assertEqual(response.data[0]['count'], 5)
+
+    def test_set_portfolio_item_count_unauthenticated(self):
+        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 10})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_set_portfolio_item_count_authenticated(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 10})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['message'], 'Portfolio item updated')
+        portfolio_item = PortfolioItem.objects.get(user=self.user, item_data=self.item_data)
+        self.assertEqual(portfolio_item.count, 10)
+
+    def test_set_portfolio_item_count_delete(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 0})
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(PortfolioItem.objects.filter(user=self.user, item_data=self.item_data).exists())

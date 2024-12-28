@@ -17,6 +17,7 @@ const ItemDetailsPage = () => {
 
   const [itemData, setItemData] = useState<ItemData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isInPortfolio, setIsInPortfolio] = useState<boolean>(false);
 
   useEffect(() => {
     const getItemData = async () => {
@@ -30,8 +31,8 @@ const ItemDetailsPage = () => {
         if (response.ok) {
           console.log("Response ok");
           const data = await response.json();
-          console.log(data);
-          setItemData(data);
+          setIsInPortfolio(data['is_in_portfolio']);
+          setItemData(data['item']);
         } else {
           console.log(
             `Bad status code: ${response.statusText} (${response.status})`

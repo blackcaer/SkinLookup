@@ -17,6 +17,7 @@ const ITEMS_PER_PAGE = 36;
 
 const AllItemList = () => {
   const [items, setItems] = useState<ItemInfo[]>([]);
+  const [namesInPortfolio, setNamesInPortfolio] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -29,7 +30,8 @@ const AllItemList = () => {
           throw new Error("Failed to fetch items");
         }
         const data = await response.json();
-        setItems(data);
+        setNamesInPortfolio(data['names_in_portfolio']);
+        setItems(data['items']);
       } catch (error) {
         setError("Error fetching items");
       } finally {

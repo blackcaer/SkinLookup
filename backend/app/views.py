@@ -21,7 +21,20 @@ def get_all_items(request):
     item_collection = request.GET.get('itemCollection')
     items = filter_items(name=name, item_type=item_type, item_collection=item_collection)
     serializer = ItemSerializer(items, many=True)
-    return Response(serializer.data)
+
+    portfolio_items = []
+    if request.user.is_authenticated:
+        portfolio_items = (
+            request.user.portfolio.all()
+            .values_list('item_data__item__name', flat=True)
+        )
+
+    response_data = {
+        "items": serializer.data,
+        "names_in_portfolio": list(portfolio_items),
+    }
+
+    return Response(response_data)
 
 @api_view(['GET'])
 def get_item_details(request):
@@ -36,7 +49,17 @@ def get_item_details(request):
     item_data = get_item_data(name=name, name_id=name_id)
     if item_data:
         serializer = ItemDataSerializer(item_data)
-        return Response(serializer.data)
+
+        is_in_portfolio = False
+        if request.user.is_authenticated:
+            is_in_portfolio = request.user.portfolio.filter(item_data__item__name=name).exists()
+
+        response_data = {
+            "item": serializer.data,
+            "is_in_portfolio": is_in_portfolio,
+        }
+
+        return Response(response_data)
     else:
         return Response({"error": "Item not found"}, status=404)
 
