@@ -164,18 +164,18 @@ class PortfolioItemModelTest(TestCase):
             timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
-            itemData=self.item_data, count=5
+            item_data=self.item_data, count=5
         )
 
     def test_portfolio_item_creation(self):
         self.assertEqual(PortfolioItem.objects.count(), 1)
 
     def test_portfolio_item_existence(self):
-        self.assertTrue(PortfolioItem.objects.filter(itemData=self.item_data).exists())
+        self.assertTrue(PortfolioItem.objects.filter(item_data=self.item_data).exists())
 
     def test_portfolio_item_deletion(self):
         self.portfolio_item.delete()
-        self.assertFalse(PortfolioItem.objects.filter(itemData=self.item_data).exists())
+        self.assertFalse(PortfolioItem.objects.filter(item_data=self.item_data).exists())
 
 class UserModelTest(TestCase):
 
@@ -193,7 +193,7 @@ class UserModelTest(TestCase):
             timeRefreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
-            itemData=self.item_data, count=5
+            item_data=self.item_data, count=5
         )
         self.user.portfolio.add(self.portfolio_item)
 
@@ -204,7 +204,7 @@ class UserModelTest(TestCase):
         self.assertEqual(self.user.portfolio.count(), 1)
 
     def test_user_portfolio_item_existence(self):
-        self.assertTrue(self.user.portfolio.filter(itemData=self.item_data).exists())
+        self.assertTrue(self.user.portfolio.filter(item_data=self.item_data).exists())
 
     def test_user_deletion(self):
         self.user.delete()

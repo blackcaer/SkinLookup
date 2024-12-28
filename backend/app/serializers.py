@@ -20,6 +20,7 @@ class ItemDataSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
+    item_data = ItemDataSerializer()
     class Meta:
         model = PortfolioItem
         fields = '__all__'
