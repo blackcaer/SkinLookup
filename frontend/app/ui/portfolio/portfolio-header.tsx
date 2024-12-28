@@ -1,11 +1,11 @@
-import { ItemInfo } from "../types";
+import { PItem } from "@/app/ui/common/types";
 import CardInfo from "./card-info";
 
 interface PortfolioHeaderProps {
-  itemList: { item: ItemInfo; count: number }[];
+  pitemList: PItem[];
 }
 
-export default function PortfolioHeader({itemList}:PortfolioHeaderProps) {
+export default function PortfolioHeader({pitemList: itemList}:PortfolioHeaderProps) {
   const foo = itemList.reduce((sum, currentItem) => sum + currentItem.count, 0);
   return (
     <div className="flex flex-row justify-center mb-6 gap-4">

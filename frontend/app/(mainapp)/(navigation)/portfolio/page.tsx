@@ -37,7 +37,6 @@ export default function Page() {
             const { item_data, ...rest } = item;
             return { itemData: item_data, ...rest };
           });
-          console.log(correctedData);
           setPItemList(correctedData);
         } else {
           console.log(
@@ -54,11 +53,13 @@ export default function Page() {
     getPortfolio();
   }, []);
 
-  if (pitemList.length === 0 || isLoading) {
-    return <div>Empty</div>;
-  }
   return (
     <>
+    {isLoading ? (
+      <div className="w-full h-[800px] bg-gray-200 animate-pulse rounded-lg"></div>
+    ):
+    (<>
+    
       <PortfolioHeader pitemList={pitemList} />
 
       <div className="mb-6">
@@ -68,6 +69,9 @@ export default function Page() {
       <div>
         <ItemList pitemList={pitemList} setPItemList={setPItemList} />
       </div>
+    </>)}
+    
     </>
-  );
+  )
+  
 }
