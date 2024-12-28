@@ -7,34 +7,58 @@ interface ItemListProps {
   setPItemList: React.Dispatch<React.SetStateAction<PItem[]>>;
 }
 
+const sendItemCount = async (itemName: string, count: number) => {
+  try {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/portfolio/set_item_count/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: itemName,
+          count: count,
+        }),
+      }
+    );
+    console.log("Response: ", response);
+    if (response.ok) {
+      console.log("Response ok");
+    } else {
+      console.log(
+        `Bad status code: ${response.statusText} (${response.status})`
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching item data:", error);
+    console.log("Error fetching item data");
+  }
+};
+
 const ItemList: React.FC<ItemListProps> = ({
   pitemList: pitemList,
   setPItemList: setPItemList,
 }) => {
-  const handleRemoveItem = (nameId: number) => {
-    setPItemList((prevItems) =>
-      prevItems.filter((p_item) => p_item.itemData.item.nameId !== nameId)
-    );
-  };
+  const handleOnChangeCount = (name: string, count: number) => {
+    sendItemCount(name, count);
 
-  const handleIncreaseItem = (nameId: number) => {
-    setPItemList((prevItems) =>
-      prevItems.map((p_item) =>
-        p_item.itemData.item.nameId === nameId
-          ? { ...p_item, count: p_item.count + 1 }
-          : p_item
-      )
-    );
-  };
-
-  const handleDecreaseItem = (nameId: number) => {
-    setPItemList((prevItems) =>
-      prevItems.map((p_item) =>
-        p_item.itemData.item.nameId === nameId && p_item.count > 1
-          ? { ...p_item, count: p_item.count - 1 }
-          : p_item
-      )
-    );
+    if (count === 0) {
+      setPItemList((prevItems) =>
+        prevItems.filter((p_item) => p_item.itemData.item.name !== name)
+      );
+    } else
+      setPItemList((prevItems) =>
+        prevItems.map((p_item) =>
+          p_item.itemData.item.name === name ? { ...p_item, count } : p_item
+        )
+      );
   };
 
   return (
@@ -48,9 +72,9 @@ const ItemList: React.FC<ItemListProps> = ({
             key={itemData.item.nameId}
             item={itemData.item}
             count={count}
-            onRemove={() => handleRemoveItem(itemData.item.nameId)}
-            onIncrease={() => handleIncreaseItem(itemData.item.nameId)}
-            onDecrease={() => handleDecreaseItem(itemData.item.nameId)}
+            onChangeCount={(count) =>
+              handleOnChangeCount(itemData.item.name, count)
+            }
           />
         ))}
       </div>
