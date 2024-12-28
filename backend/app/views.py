@@ -52,7 +52,7 @@ def get_item_details(request):
 
         is_in_portfolio = False
         if request.user.is_authenticated:
-            is_in_portfolio = request.user.portfolio.filter(item_data__item__name=name).exists()
+            is_in_portfolio = request.user.portfolio.filter(item_data=item_data).exists()
 
         response_data = {
             "item": serializer.data,
