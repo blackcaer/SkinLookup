@@ -5,9 +5,13 @@ import { ItemInfo } from "@/app/ui/common/types";
 import {
     PlusIcon,
     MinusIcon,
-    TrashIcon
+    TrashIcon,
+    MagnifyingGlassCircleIcon,
+    MagnifyingGlassIcon
   } from "@heroicons/react/24/outline";
 import ItemPreviewBase from "../all/item-preview-base";
+import Link from "next/link";
+
 
 interface PortfolioItemPreviewProps {
   item: ItemInfo;
@@ -55,6 +59,7 @@ const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onCh
       <ItemPreviewBase item={{ ...item, name: formattedItemName }}/>
       
       <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-90 transition-opacity flex items-center justify-center rounded-lg">
+        
         <div className="flex flex-col text-white items-center justify-center gap-3">
           <form>
             <button type="button" className="h-12 w-12" onClick={handleIncrease}><PlusIcon/></button>
@@ -62,6 +67,9 @@ const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onCh
             <button type="button" className="h-12 w-12" onClick={handleDelete}><TrashIcon/></button>
           </form>
         </div>
+        <Link href={`/item_details?name=${item.name}`}>
+        <button type="button" className="h-8 w-8 absolute inset-4 opacity-80"><MagnifyingGlassIcon/></button>
+        </Link>
       </div>
     </div>
   );
