@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import datetime, timedelta
-from django.core.exceptions import ValidationError
 import requests
-# Create your models here.
+
+MAX_DAYS_PHSM = 7 # Max days of price history to fetched from api. -1 means all data
 
 class Item(models.Model):
     nameId = models.IntegerField(primary_key=True, unique=True)
@@ -79,7 +79,7 @@ class ItemData(models.Model):
             return True
         return self.timeRefreshed < timezone.now() - timedelta(hours=hours)
     
-    def _get_phsm_from_api(self, max_days_phsm=7):
+    def _get_phsm_from_api(self, max_days_phsm):
         url = f"https://rust.scmm.app/api/item/{self.item.name}/sales?maxDays={max_days_phsm}&ochl=false"
         response = requests.get(url)
         if response.status_code == 200:
@@ -94,7 +94,7 @@ class ItemData(models.Model):
 
     def update_data(self):
         try:
-            self.phsm = self._get_phsm_from_api()
+            self.phsm = self._get_phsm_from_api(max_days_phsm=MAX_DAYS_PHSM)
         except requests.HTTPError as e:
             print(f"Error getting phsm for {self.item.name}: ", e)
             return

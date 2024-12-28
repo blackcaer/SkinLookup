@@ -15,20 +15,21 @@ export default function SearchBar() {
 
   useEffect(() => {
     const searchQuery = async () => {
-      if(!query)
-      {
+      if (!query) {
         setSearchResults([]);
-        return; 
+        return;
       }
-        
-      const staticResult = searchResults.filter((item) => item.toLowerCase().includes(query.toLowerCase()))
-      if(staticResult.length >= MAX_SEARCH_RESULTS) // Short circuit if we have enough results
-      {
+
+      const staticResult = searchResults.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase())
+      );
+      if (staticResult.length >= MAX_SEARCH_RESULTS) {
+        // Short circuit if we have enough results
         setSearchResults(staticResult);
         console.log("short circuit");
         return;
       }
-      
+
       try {
         const response = await fetch(
           `http://127.0.0.1:8000/api/search/${query}/`,
@@ -42,7 +43,9 @@ export default function SearchBar() {
           setSearchResults(data);
         } else {
           console.log("Response bad");
-          console.log(`Error fetching item data: ${response.statusText} (${response.status})`);
+          console.log(
+            `Error fetching item data: ${response.statusText} (${response.status})`
+          );
         }
       } catch (error) {
         console.error("Error fetching item data:", error);
@@ -68,7 +71,7 @@ export default function SearchBar() {
       />
       {searchResults.length > 0 && (
         <ul className="absolute top-full left-0 w-full bg-white border-x-2 border-b-2 border-t-0 z-10 rounded-b-lg">
-          {searchResults.slice(0,MAX_SEARCH_RESULTS).map((result, index) => (
+          {searchResults.slice(0, MAX_SEARCH_RESULTS).map((result, index) => (
             <li key={index} className="p-2 hover:bg-gray-100 rounded-lg">
               <Link
                 href={"/item_details/?name=" + result}
