@@ -1,32 +1,36 @@
-'use client';
-import React, { useState } from 'react';
-import { ItemInfo, PItem } from '@/app/ui/common/types';
-import PortfolioItemPreview from './portfolio-item-preview';
-
+"use client";
+import { PItem } from "@/app/ui/common/types";
+import PortfolioItemPreview from "./portfolio-item-preview";
 
 interface ItemListProps {
-  itemList: { item: ItemInfo; count: number }[];
-  setItemList: React.Dispatch<React.SetStateAction<{ item: ItemInfo; count: number }[]>>;
+  pitemList: PItem[];
+  setPItemList: React.Dispatch<React.SetStateAction<PItem[]>>;
 }
 
-const ItemList: React.FC<ItemListProps> = ({ itemList , setItemList }) => {
-  
+const ItemList: React.FC<ItemListProps> = ({
+  pitemList: pitemList,
+  setPItemList: setPItemList,
+}) => {
   const handleRemoveItem = (nameId: number) => {
-    setItemList((prevItems) => prevItems.filter((p_items) => p_items.item.nameId !== nameId));
+    setPItemList((prevItems) =>
+      prevItems.filter((p_item) => p_item.itemData.item.nameId !== nameId)
+    );
   };
 
   const handleIncreaseItem = (nameId: number) => {
-    setItemList((prevItems) =>
-      prevItems.map((p_items) =>
-        p_items.item.nameId === nameId ? { ...p_items, count: p_items.count + 1 } : p_items
+    setPItemList((prevItems) =>
+      prevItems.map((p_item) =>
+        p_item.itemData.item.nameId === nameId
+          ? { ...p_item, count: p_item.count + 1 }
+          : p_item
       )
     );
   };
 
   const handleDecreaseItem = (nameId: number) => {
-    setItemList((prevItems) =>
+    setPItemList((prevItems) =>
       prevItems.map((p_item) =>
-        p_item.item.nameId === nameId && p_item.count > 1
+        p_item.itemData.item.nameId === nameId && p_item.count > 1
           ? { ...p_item, count: p_item.count - 1 }
           : p_item
       )
@@ -35,20 +39,21 @@ const ItemList: React.FC<ItemListProps> = ({ itemList , setItemList }) => {
 
   return (
     <div>
-        <div className="text-right pr-6 pb-2 text-lg">{itemList.length} shown positions </div>
-        <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
-            
-        {itemList.map(({ item, count }) => (
-            <PortfolioItemPreview
-            key={item.nameId}
-            item={item}
+      <div className="text-right pr-6 pb-2 text-lg">
+        {pitemList.length} shown positions{" "}
+      </div>
+      <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
+        {pitemList.map(({ itemData, count }) => (
+          <PortfolioItemPreview
+            key={itemData.item.nameId}
+            item={itemData.item}
             count={count}
-            onRemove={() => handleRemoveItem(item.nameId)}
-            onIncrease={() => handleIncreaseItem(item.nameId)}
-            onDecrease={() => handleDecreaseItem(item.nameId)}
-            />
+            onRemove={() => handleRemoveItem(itemData.item.nameId)}
+            onIncrease={() => handleIncreaseItem(itemData.item.nameId)}
+            onDecrease={() => handleDecreaseItem(itemData.item.nameId)}
+          />
         ))}
-        </div>
+      </div>
     </div>
   );
 };
