@@ -1,6 +1,6 @@
 'use client';
     
-import { FC, useState } from "react";
+import { FC, useState, useCallback } from "react";
 import { ItemInfo } from "@/app/ui/common/types";
 import {
     PlusIcon,
@@ -15,20 +15,31 @@ interface PortfolioItemPreviewProps {
   onChangeCount: (count:number) => void;
 }
 
+const debounce = (func: (...args: any[]) => void, delay: number) => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: any[]) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
 const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onChangeCount }) => {
   const [itemCount, setItemCount] = useState(count || 1);
+  const debouncedOnChangeCount = useCallback(debounce(onChangeCount, 400), []);
 
   const handleIncrease = () => {
     const newCount = itemCount + 1;
     setItemCount(newCount);
-    onChangeCount(newCount);
+    debouncedOnChangeCount(newCount);
   };
 
   const handleDecrease = () => {
     if (itemCount > 1) {
       const newCount = itemCount - 1;
       setItemCount(newCount);
-      onChangeCount(newCount);
+      debouncedOnChangeCount(newCount);
     }
   };
 
