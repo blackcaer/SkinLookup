@@ -11,7 +11,7 @@ class Item(models.Model):
     appId = models.IntegerField()
     itemType = models.CharField(max_length=100)
     itemCollection = models.CharField(max_length=100)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     previewUrl = models.URLField()
     supplyTotalEstimated = models.IntegerField()
     timeAccepted = models.DateField()
@@ -107,6 +107,8 @@ class ItemData(models.Model):
 class PortfolioItem(models.Model):
     itemData = models.ForeignKey(ItemData, on_delete=models.CASCADE)
     count = models.IntegerField()
+
+    unique_together = [['user', 'item_data']]
 
     def __str__(self):
         return f"{self.item_data.item.name} - {self.count}"
