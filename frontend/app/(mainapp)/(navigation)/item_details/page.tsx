@@ -8,6 +8,7 @@ import ChartPrice from "@/app/ui/charts/chart-price";
 import ChartVolume from "@/app/ui/charts/chart-volume";
 import { ChartConfigVolMed } from "@/app/ui/common/chart-configs";
 import { ItemData } from "@/app/ui/common/types";
+import { clearTokens, getToken } from "@/services/authServise";
 
 const ItemDetailsPage = () => {
   const router = useRouter();
@@ -22,25 +23,31 @@ const ItemDetailsPage = () => {
   useEffect(() => {
     const getItemData = async () => {
       try {
+        const token = getToken();
         const response = await fetch(
           `http://127.0.0.1:8000/api/items/?name=${name}`,
           {
             method: "GET",
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
           }
         );
         if (response.ok) {
-          console.log("Response ok");
           const data = await response.json();
-          setIsInPortfolio(data['is_in_portfolio']);
-          setItemData(data['item']);
+          setIsInPortfolio(data["is_in_portfolio"]);
+          setItemData(data["item"]);
         } else {
+          if (token) {
+            // Authorization error, expired token
+            clearTokens();
+            window.location.reload();
+            return;
+          }
           console.log(
             `Bad status code: ${response.statusText} (${response.status})`
           );
         }
       } catch (error) {
         console.error("Error fetching item data:", error);
-        console.log("Error fetching item data");
       } finally {
         setIsLoading(false);
       }
@@ -60,7 +67,10 @@ const ItemDetailsPage = () => {
         ) : (
           itemData && (
             <>
-              <ItemDetailHeader item={itemData.item} />
+              <ItemDetailHeader
+                item={itemData.item}
+                isInPortfolio={isInPortfolio}
+              />
               <ChartPrice data={itemData.phsm} config={ChartConfigVolMed} />
               <ChartVolume data={itemData.phsm} config={ChartConfigVolMed} />
             </>

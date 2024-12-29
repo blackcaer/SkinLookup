@@ -3,9 +3,12 @@ import Image from "next/image";
 import { ItemInfo } from "@/app/ui/common/types";
 import Skeleton from "react-loading-skeleton";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { sendItemCount } from "@/services/portfolioService";
 
 interface ItemDetailHeaderProps {
   item: ItemInfo;
+  isInPortfolio: boolean;
 }
 
 function StatDisplayer({
@@ -24,8 +27,17 @@ function StatDisplayer({
   );
 }
 
-export default function ItemDetailHeader({ item }: ItemDetailHeaderProps) {
+export default function ItemDetailHeader({
+  item,
+  isInPortfolio: inPortfolio,
+}: ItemDetailHeaderProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isInPortfolio, setIsInPortfolio] = useState(inPortfolio);
+
+  const handleChangePortfolio = () => {
+    sendItemCount(item.name, isInPortfolio ? 0 : 1);
+    setIsInPortfolio(!isInPortfolio);
+  };
 
   return (
     <div className="flex flex-row justify-center flex-wrap gap-4">
@@ -74,6 +86,13 @@ export default function ItemDetailHeader({ item }: ItemDetailHeaderProps) {
           />
           <StatDisplayer title="Accepted" value={item.timeAccepted} />
         </div>
+        <Button
+          variant={"outline"}
+          className="mt-auto"
+          onClick={handleChangePortfolio}
+        >
+          {isInPortfolio ? "Remove from portfolio" : "Add to portfolio"}
+        </Button>
       </div>
     </div>
   );
