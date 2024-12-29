@@ -65,39 +65,38 @@ const LoginPage: React.FC = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
+      className="flex justify-center items-center h-screen"
     >
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", width: "300px" }}
-      >
-        <h2>Login</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <label>
-          Username:
-          <Input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password:
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        <Button type="submit">Login</Button>
-      </form>
+      <div className="border p-6 rounded-lg">
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", width: "300px" }}
+        >
+          <h2 className="text-xl font-semibold text-center">Login</h2>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+         
+          <label className="py-4">
+            <p className="mb-2">Username:</p>
+            <Input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <label className="py-4">
+            <p className="mb-2">Password:</p>
+            
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          <Button type="submit" className="p-4 mt-2">Login</Button>
+        </form>
+      </div>
     </div>
   );
 };
