@@ -8,6 +8,7 @@ from .models import Item, User, ItemData, PortfolioItem
 from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, PortfolioItemSerializer, RegisterSerializer
 from .services import get_item_data, filter_items
 from rest_framework import generics
+from rest_framework_simplejwt.tokens import RefreshToken
 
 logger = logging.getLogger('django')
 
