@@ -1,6 +1,8 @@
+import { getToken } from "./authServise";
+
 export const sendItemCount = async (itemName: string, count: number) => {
   try {
-    const token = localStorage.getItem("access_token");
+    const token = getToken();
     if (!token) {
       console.error("No token found");
       return;

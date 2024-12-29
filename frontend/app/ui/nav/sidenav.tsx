@@ -4,6 +4,7 @@ import NavLinks from '@/app/ui/nav/nav-links';
 import SomeLogo from '@/app/ui/nav/some-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import { clearTokens } from '@/services/authServise';
 
 export default function SideNav() {
   const router = useRouter();
@@ -24,8 +25,7 @@ export default function SideNav() {
       });
   
       if (response.ok) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+        clearTokens();
         router.push('/login');
       } else {
         console.error('Logout failed with status:', response.status);

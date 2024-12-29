@@ -6,6 +6,7 @@ import ItemList from "@/app/ui/portfolio/item-list";
 import PortfolioHeader from "@/app/ui/portfolio/portfolio-header";
 
 import { PItem } from "@/app/ui/common/types";
+import { getToken } from "@/services/authServise";
 
 export default function Page() {
 
@@ -16,7 +17,7 @@ export default function Page() {
     
     const getPortfolio = async () => {
       try {
-        const token = localStorage.getItem("access_token");
+        const token = getToken();
         if (!token) {
           console.error("No token found");
           return;

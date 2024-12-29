@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getToken } from "@/services/authServise";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
@@ -13,7 +14,7 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("access_token");
+      const token = getToken();
       if (token) {
         const response = await fetch(
           "http://127.0.0.1:8000/api/is_authenticated/",
