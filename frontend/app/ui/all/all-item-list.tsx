@@ -12,6 +12,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { clearTokens, getToken } from "@/services/authServise";
 
 const ITEMS_PER_PAGE = 36;
 
@@ -25,9 +26,10 @@ const AllItemList = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const token = localStorage.getItem("access_token");
+      const token = getToken();
       if (!token) {
         console.log("No token found");
+        setIsLoggedIn(false);
       } else {
         setIsLoggedIn(true);
       }
@@ -35,19 +37,24 @@ const AllItemList = () => {
       try {
         const response = await fetch("http://127.0.0.1:8000/api/items/all/", {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!response.ok) {
-          throw new Error("Failed to fetch items");
-        }
-        const data = await response.json();
+          if (token) {
+            // Authorization error, expired token
+            clearTokens();
+            window.location.reload();
+            return;
+          }else 
+            throw new Error(`${response.status} ${response.statusText}`);
+        } 
 
-        setNamesInPortfolio(data["names_in_portfolio"]); // If user not authenticated, this will be an empty array
+        const data = await response.json();
+        setNamesInPortfolio(data["names_in_portfolio"]); // If user not authenticated, this will be []
         setItems(data["items"]);
+
       } catch (error) {
-        setError("Error fetching items");
+        setError("Error fetching items: " + error);
       } finally {
         setLoading(false);
       }
