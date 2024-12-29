@@ -8,9 +8,17 @@ interface ItemDetailHeaderProps {
   item: ItemInfo;
 }
 
-function StatDisplayer({ title, value }: { title: string; value: string }) {
+function StatDisplayer({
+  title,
+  value,
+  className,
+}: {
+  title: string;
+  value: string;
+  className?: string;
+}) {
   return (
-    <p className="flex flex-row justify-between">
+    <p className={`flex flex-row justify-between ${className || ""}`}>
       <strong>{title}:</strong> {value}
     </p>
   );
@@ -20,30 +28,36 @@ export default function ItemDetailHeader({ item }: ItemDetailHeaderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="flex flex-row justify-center flex-wrap">
+    <div className="flex flex-row justify-center flex-wrap gap-4">
       <Link href="" className="flex flex-row">
         {isLoading && (
           <Skeleton
             height={400}
             width={400}
-            className="absolute top-0 left-0 rounded-md"
+            className="absolute top-0 left-0 rounded-lg shadow-xl"
           />
         )}
         <Image
           src={item.previewUrl || "/default.png"}
           alt={`${item.name} picture`}
-          className="mr-4 rounded-lg shadow-xl"
+          className="rounded-lg shadow-xl"
           width={400}
           height={400}
           onLoad={() => setIsLoading(false)}
         />
       </Link>
 
-      <div className="flex flex-col py-8 px-4 bg-gray-50 rounded-lg shadow-lg text-xl">
-        <h2 className="text-2xl font-bold mb-6">Item name: {item.name}</h2>
-
+      <div className="flex flex-col py-8 px-4 bg-gray-50 rounded-lg shadow-lg text-xl min-w-[400px]">
         <div className="text-lg flex flex-col gap-2">
-          <StatDisplayer title="Collection" value={item.itemCollection} />
+          <StatDisplayer
+            title="Item name"
+            value={item.name}
+            className="text-2xl mb-6"
+          />
+          <StatDisplayer
+            title="Collection"
+            value={item.itemCollection || "None"}
+          />
           <StatDisplayer title="Item type" value={item.itemType} />
           <StatDisplayer
             title="Estimated supply"
