@@ -3,40 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getToken } from "@/services/authServise";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = getToken();
-      if (token) {
-        const response = await fetch(
-          "http://127.0.0.1:8000/api/is_authenticated/",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.ok) {
-          setIsAuthenticated(true);
-          router.push("/all");
-        } else {
-          setIsAuthenticated(false);
-        }
-      }
-    };
-
-    checkAuth();
-  }, [router]);
+  const token = getToken();
+      if(token)
+        router.push("/all");
+    
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -54,7 +33,6 @@ const LoginPage: React.FC = () => {
       const data = await response.json();
       localStorage.setItem("access_token", data.access);
       localStorage.setItem("refresh_token", data.refresh);
-      setIsAuthenticated(true);
       console.log("Login successful");
       router.push("/all");
     } else {
@@ -64,9 +42,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div
-      className="flex justify-center items-center h-screen"
-    >
+    <div className="flex justify-center items-center h-screen">
       <div className="border p-6 rounded-lg">
         <form
           onSubmit={handleSubmit}
@@ -74,7 +50,7 @@ const LoginPage: React.FC = () => {
         >
           <h2 className="text-xl font-semibold text-center">Login</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
-         
+          
           <label className="py-4">
             <p className="mb-2">Username:</p>
             <Input
@@ -86,7 +62,6 @@ const LoginPage: React.FC = () => {
           </label>
           <label className="py-4">
             <p className="mb-2">Password:</p>
-            
             <Input
               type="password"
               value={password}
@@ -95,6 +70,9 @@ const LoginPage: React.FC = () => {
             />
           </label>
           <Button type="submit" className="p-4 mt-2">Login</Button>
+          <p className="text-center mt-4">
+            Don't have an account? <Link href="/register" className="text-blue-500">Register</Link>
+          </p>
         </form>
       </div>
     </div>
