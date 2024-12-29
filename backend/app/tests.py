@@ -357,3 +357,21 @@ class ViewsTest(TestCase):
         response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 0})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(PortfolioItem.objects.filter(user=self.user, item_data=self.item_data).exists())
+
+class UserRegistrationTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_register_user(self):
+        response = self.client.post(reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(User.objects.filter(username='newuser').exists())
+
+    def test_register_user_missing_fields(self):
+        response = self.client.post(reverse('register'), {'username': 'newuser'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_register_user_existing_username(self):
+        User.objects.create_user(username='existinguser', password='password')
+        response = self.client.post(reverse('register'), {'username': 'existinguser', 'password': 'newpassword'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
