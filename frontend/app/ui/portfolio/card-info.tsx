@@ -20,19 +20,19 @@ export default function CardInfo({ title, description,content }: CardInfoProps) 
     
   return (
 
-    <Card className="w-full min-h-[100px]">
+    <Card className="w-full min-h-[100px] flex flex-col justify-between">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
 
       </CardHeader>
-        <CardContent>
-        <div className="flex flex-col justify-center items-center">
+      <CardContent>
+      <div className="flex flex-col justify-end items-center h-full">
 
-            <p className="text-3xl font-bold text-center">{content}</p>
-          
-        </div>
-        </CardContent>
+          <p className="text-3xl font-bold text-center whitespace-nowrap">{content}</p>
+        
+      </div>
+      </CardContent>
     </Card>
   );
 }
