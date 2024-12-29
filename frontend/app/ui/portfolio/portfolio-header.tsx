@@ -16,8 +16,8 @@ export default function PortfolioHeader({pitemList}:PortfolioHeaderProps) {
   // console.log("sumPriceNow",sumPriceNow);
   const weeklyChange = (100*(sumPriceNow-sumPriceWeekAgo)/sumPriceNow);
 
-  return (
-    <div className="flex flex-row justify-center mb-6 gap-4">
+  return (  
+    <div className="grid grid-cols-2 lg:flex flex-row justify-center mb-6 gap-4">
       <CardInfo
         title="Total value"
         description="Total value of items in portfolio"

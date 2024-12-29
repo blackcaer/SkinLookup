@@ -32,7 +32,7 @@ const ItemList: React.FC<ItemListProps> = ({
       <div className="text-right pr-6 pb-2 text-lg">
         {pitemList.length} shown positions{" "}
       </div>
-      <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center">
+      <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center items-center">
         {pitemList.map(({ itemData, count }) => (
           <PortfolioItemPreview
             key={itemData.item.nameId}
