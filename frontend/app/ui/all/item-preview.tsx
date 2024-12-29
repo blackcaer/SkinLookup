@@ -37,9 +37,9 @@ const ItemPreview: FC<ItemPreviewProps> = ({
           onClick={handleChangePortfolio}
         >
           {isInPortfolio ? (
-            <CheckIcon className="w-8 h-8" />
+            <CheckIcon className="w-8 h-8 text-white" />
           ) : (
-            <PlusIcon className="w-8 h-8" />
+            <PlusIcon className="w-8 h-8 text-white" />
           )}
         </button>
       )}
