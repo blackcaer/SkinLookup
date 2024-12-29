@@ -1,17 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { demo1, demo2 } from "@/app/ui/demo-data";
 import { AccordionCharts } from "@/app/ui/portfolio/accordion-charts";
 import ItemList from "@/app/ui/portfolio/item-list";
 import PortfolioHeader from "@/app/ui/portfolio/portfolio-header";
 
 import { PItem } from "@/app/ui/common/types";
-import { getToken } from "@/services/authServise";
+import { clearTokens, getToken } from "@/services/authServise";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Page() {
-
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [pitemList, setPItemList] = useState<PItem[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  
 
   useEffect(() => {
     
@@ -19,9 +23,11 @@ export default function Page() {
       try {
         const token = getToken();
         if (!token) {
-          console.error("No token found");
+          console.log("No token found");
+          setIsLoggedIn(false);
           return;
-        }
+        }else
+          setIsLoggedIn(true);
         const response = await fetch(
           `http://127.0.0.1:8000/api/portfolio/`,
           {
@@ -40,9 +46,17 @@ export default function Page() {
           });
           setPItemList(correctedData);
         } else {
-          console.log(
+          console.error(
             `Bad status code: ${response.statusText} (${response.status})`
           );
+          if (token) 
+          {
+            // Authorization error, expired token
+            clearTokens();
+            window.location.reload();
+            return;
+          }
+          
         }
       } catch (error) {
         console.error("Error fetching item data:", error);
@@ -53,6 +67,17 @@ export default function Page() {
     };
     getPortfolio();
   }, []);
+
+  if (!isLoggedIn) {
+    return (
+    <div className="flex flex-col items-center justify-center h-[800px] gap-4 text-xl">
+      <h2> You have to be logged in to see this site </h2>
+        <Link href='/login/'>
+          <Button className="px-8 py-6 text-xl"> Log in </Button>
+        </Link>
+      </div>
+      );
+  }
 
   return (
     <>
