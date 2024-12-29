@@ -34,16 +34,21 @@ export default function ItemDetailHeader({ item }: ItemDetailHeaderProps) {
           <Skeleton
             height={400}
             width={400}
-            className="absolute top-0 left-0 rounded-lg shadow-xl"
+            className={`absolute top-0 left-0 rounded-lg shadow-xl ${
+              isLoading ? "block" : "hidden pointer-events-none"
+            }`}
           />
         )}
         <Image
           src={item.previewUrl || "/default.png"}
           alt={`${item.name} picture`}
-          className="rounded-lg shadow-xl"
+          className={`rounded-lg shadow-xl transition-opacity${
+            isLoading ? "absolute" : "block"
+          }`}
           width={400}
           height={400}
           onLoad={() => setIsLoading(false)}
+          priority={true}
         />
       </Link>
 
