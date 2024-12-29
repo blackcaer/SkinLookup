@@ -15,9 +15,13 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class ItemDataSerializer(serializers.ModelSerializer):
     item = ItemSerializer()
+    timeRefreshed = serializers.DateTimeField(source='time_refreshed')
+    priceWeekAgo = serializers.FloatField(source='price_week_ago')
+    priceNow = serializers.FloatField(source='price_newest')
+
     class Meta:
         model = ItemData
-        fields = '__all__'
+        fields = ['item', 'timeRefreshed', 'priceWeekAgo', 'priceNow', 'phsm']
 
 class PortfolioItemSerializer(serializers.ModelSerializer):
     item_data = ItemDataSerializer()

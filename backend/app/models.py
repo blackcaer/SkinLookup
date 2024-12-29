@@ -37,7 +37,7 @@ class Item(models.Model):
 class ItemData(models.Model):
     item = models.OneToOneField(
         Item, primary_key=True, on_delete=models.CASCADE, unique=True)
-    timeRefreshed = models.DateTimeField(null=True, blank=True)
+    time_refreshed = models.DateTimeField(null=True, blank=True)  # Renamed field
     price_week_ago = models.FloatField(null=True, blank=True)
     price_newest = models.FloatField(null=True, blank=True)
     phsm = models.JSONField(null=True, blank=True)
@@ -88,9 +88,9 @@ class ItemData(models.Model):
             response.raise_for_status()
 
     def is_older_than(self, hours=24):
-        if self.timeRefreshed is None or self.phsm is None:
+        if self.time_refreshed is None or self.phsm is None:  # Updated field name
             return True
-        return self.timeRefreshed < timezone.now() - timedelta(hours=hours)
+        return self.time_refreshed < timezone.now() - timedelta(hours=hours)  # Updated field name
 
     def force_update_data(self):
         try:
@@ -98,7 +98,7 @@ class ItemData(models.Model):
         except requests.HTTPError as e:
             print(f"Error getting phsm for {self.item.name}: ", e)
             return
-        self.timeRefreshed = timezone.now()
+        self.time_refreshed = timezone.now()  # Updated field name
         self.save()
 
     def __str__(self):

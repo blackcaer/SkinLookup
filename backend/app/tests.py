@@ -20,7 +20,7 @@ class ItemModelTest(TestCase):
             {"date": "2024-10-10", "median": 2.75, "volume": 57}
         ]
         self.item1data = ItemData.objects.create(
-            item=self.item1, phsm=phsm_data, timeRefreshed=timezone.now()
+            item=self.item1, phsm=phsm_data, time_refreshed=timezone.now()
         )
         self.item2 = Item.objects.create(
             nameId=2, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
@@ -80,7 +80,7 @@ class ItemDataModelTest(TestCase):
         self.item_data = ItemData.objects.create(
             item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
-            timeRefreshed=timezone.now()
+            time_refreshed=timezone.now()  # Updated field name
         )
 
     def test_item_data_creation(self):
@@ -94,15 +94,15 @@ class ItemDataModelTest(TestCase):
         self.assertFalse(ItemData.objects.filter(item=self.item).exists())
 
     def test_is_older_than(self):
-        self.item_data.timeRefreshed = timezone.now() - timedelta(hours=25)
+        self.item_data.time_refreshed = timezone.now() - timedelta(hours=25)  # Updated field name
         self.item_data.save()
         self.assertTrue(self.item_data.is_older_than(hours=24))
 
-        self.item_data.timeRefreshed = timezone.now() - timedelta(hours=23)
+        self.item_data.time_refreshed = timezone.now() - timedelta(hours=23)  # Updated field name
         self.item_data.save()
         self.assertFalse(self.item_data.is_older_than(hours=24))
 
-        self.item_data.timeRefreshed = None
+        self.item_data.time_refreshed = None  # Updated field name
         self.item_data.save()
         self.assertTrue(self.item_data.is_older_than(hours=24))
         self.assertTrue(self.item_data.is_older_than(hours=0))
@@ -118,7 +118,7 @@ class ItemDataModelTest(TestCase):
             {"date": "2024-10-10", "median": 2.75, "volume": 57}
         ]
         item_data = ItemData.objects.create(
-            item=item, phsm=phsm_data, timeRefreshed=timezone.now()
+            item=item, phsm=phsm_data, time_refreshed=timezone.now()
         )
         self.assertEqual(item_data.price_newest, 2.75)
         self.assertEqual(item_data.price_week_ago, 2.50)
@@ -133,7 +133,7 @@ class ItemDataModelTest(TestCase):
             {"date": "2024-10-10", "median": 2.75, "volume": 57}
         ]
         item_data = ItemData.objects.create(
-            item=item, phsm=phsm_data, timeRefreshed=timezone.now()
+            item=item, phsm=phsm_data, time_refreshed=timezone.now()
         )
         self.assertEqual(item_data.price_newest, 2.75)
         self.assertEqual(item_data.price_week_ago, 2.75)
@@ -145,7 +145,7 @@ class ItemDataModelTest(TestCase):
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         item_data = ItemData.objects.create(
-            item=item, phsm=[], timeRefreshed=timezone.now()
+            item=item, phsm=[], time_refreshed=timezone.now()
         )
         self.assertIsNone(item_data.price_newest)
         self.assertIsNone(item_data.price_week_ago)
@@ -161,7 +161,7 @@ class PortfolioItemModelTest(TestCase):
         self.item_data = ItemData.objects.create(
             item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
-            timeRefreshed=timezone.now()
+            time_refreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
             user=self.user, item_data=self.item_data, count=5
@@ -189,7 +189,7 @@ class UserModelTest(TestCase):
         self.item_data = ItemData.objects.create(
             item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
-            timeRefreshed=timezone.now()
+            time_refreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
             user=self.user, item_data=self.item_data, count=5
@@ -258,7 +258,7 @@ class ServicesTest(TestCase):
         self.item_data = ItemData.objects.create(
             item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
-            timeRefreshed=timezone.now() - timedelta(days=2)
+            time_refreshed=timezone.now() - timedelta(days=2)
         )
 
     def test_get_item_data(self):
@@ -283,7 +283,7 @@ class ViewsTest(TestCase):
         self.item_data = ItemData.objects.create(
             item=self.item, price_week_ago=2.50, price_newest=2.75,
             phsm=[{"date": "2024-10-10", "median": 2.73, "volume": 57}],
-            timeRefreshed=timezone.now()
+            time_refreshed=timezone.now()
         )
         self.portfolio_item = PortfolioItem.objects.create(
             user=self.user, item_data=self.item_data, count=5
@@ -320,11 +320,10 @@ class ViewsTest(TestCase):
         if response.data['item']:
             item_data = response.data['item']
             self.assertIn('item', item_data)
-            self.assertIn('price_week_ago', item_data)
-            self.assertIn('price_newest', item_data)
+            self.assertIn('priceWeekAgo', item_data)
+            self.assertIn('priceNow', item_data)
             self.assertIn('phsm', item_data)
-            self.assertIn('item', item_data)
-
+            self.assertIn('timeRefreshed', item_data)
         self.assertIn('is_in_portfolio', response.data)
         self.assertTrue(response.data['is_in_portfolio'])
 
