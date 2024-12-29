@@ -1,17 +1,27 @@
 import { FC, useState } from "react";
 import { ItemInfo } from "@/app/ui/common/types";
 import ItemPreviewBase from "./item-preview-base";
-import { PlusIcon,CheckIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { sendItemCount } from "@/services/portfolioService";
 
 interface ItemPreviewProps {
   item: ItemInfo;
   inPortfolio: boolean;
-  isLoggedIn:boolean;
+  isLoggedIn: boolean;
 }
 
-const ItemPreview: FC<ItemPreviewProps> = ({ item,inPortfolio,isLoggedIn }) => {
+const ItemPreview: FC<ItemPreviewProps> = ({
+  item,
+  inPortfolio,
+  isLoggedIn,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isInPortfolio, setIsInPortfolio] = useState(inPortfolio);
+
+  const handleChangePortfolio = () => {
+    sendItemCount(item.name, isInPortfolio ? 0 : 1);
+    setIsInPortfolio(!isInPortfolio);
+  };
 
   return (
     <div
@@ -21,13 +31,17 @@ const ItemPreview: FC<ItemPreviewProps> = ({ item,inPortfolio,isLoggedIn }) => {
     >
       <ItemPreviewBase item={item} />
       {isHovered && isLoggedIn && (
-        <div className="absolute top-2 right-2" onClick={()=>setIsInPortfolio(!isInPortfolio)}>
-          {isInPortfolio?
-          <CheckIcon className="w-8 h-8 text-white-700" />:
-          <PlusIcon className="w-8 h-8 text-white-700" />
-          }
-            
-        </div>
+        <button
+          type="button"
+          className="absolute top-2 right-2"
+          onClick={handleChangePortfolio}
+        >
+          {isInPortfolio ? (
+            <CheckIcon className="w-8 h-8" />
+          ) : (
+            <PlusIcon className="w-8 h-8" />
+          )}
+        </button>
       )}
     </div>
   );

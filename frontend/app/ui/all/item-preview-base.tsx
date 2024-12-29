@@ -16,7 +16,6 @@ export default function ItemPreviewBase({ item }: ItemPreviewBaseProps) {
     const [isLoading, setIsLoading] = useState(true);
 
     const handleLoadingComplete = () => {
-        console.log("Image loaded");
         setIsLoading(false);
     };
 
