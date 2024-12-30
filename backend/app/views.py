@@ -1,3 +1,4 @@
+import random
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -111,6 +112,14 @@ def set_portfolio_item_count(request):
             defaults={'count': count}
         )
         return Response({"message": "Portfolio item updated"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_random_item_name(request):
+    items = Item.objects.all()
+    if not items:
+        return Response({"error": "No items available"}, status=status.HTTP_404_NOT_FOUND)
+    random_item = random.choice(items)
+    return Response({"name": random_item.name}, status=status.HTTP_200_OK)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()

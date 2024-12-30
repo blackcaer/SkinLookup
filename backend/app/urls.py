@@ -11,4 +11,5 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('is_authenticated/', views.is_authenticated_view, name='is_authenticated'),  # Dodano nową ścieżkę
+    path('random_item_name/', views.get_random_item_name, name='get_random_item_name'),
 ]
