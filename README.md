@@ -56,6 +56,36 @@ Other features:
 
 ## File documentation
 
+Ommited files are automatically generated.
+
+/backend/
+- app/ - Django aplication with project's backend
+    - management/
+    - migrations/ - Automatically generated migration files
+    - admin.py - Models registered for admin panel
+    - models.py - Models for my application (Item, ItemData, PortfolioItem, User)
+    - serializers.py - Serializers for my app
+    - services.py - Helper functions, (probably I should implement all of them on models or move them to some utils.py file)
+    - tests.py - Tests for backend
+    - urls.py - routing for the application (api routes)
+    - views.py - Views handling incoming requests
+- data/ - Directory containing basic information about items included in my application.
+    - 200_popular_items.json - ItemInfo of 200 popular items
+    - Other files, if exists, are similar
+- skin_lookup/ - Django project directory. Most of files there are automatically generated
+    - urls.py - main backend routing file
+    - settings.py - setting for django application
+- .gitignore - filed and folders for git to ignore
+- db.sqlite3 - SQLite database for project
+- requirements.txt - required python packages for the project
+
+
+/frontend/
+- a
+- b
+- c
+
+
 
 
 ## How to run
