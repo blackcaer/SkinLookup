@@ -22,7 +22,7 @@ const links = [
     href: "/item_details",
     icon: DocumentMagnifyingGlassIcon,
   },
-  { name: "Compare", href: "/compare", icon: ClipboardDocumentCheckIcon },
+  //{ name: "Compare", href: "/compare", icon: ClipboardDocumentCheckIcon },
   { name: "Search", href: "/search", icon: MagnifyingGlassIcon },
   { name: "About", href: "/about", icon: InformationCircleIcon },
 ];
