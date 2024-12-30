@@ -15,9 +15,20 @@ interface AccordionChartsProps {
 }
 
 export function AccordionCharts({ pitemList }: AccordionChartsProps) {
-  const combinedData = mergeListOfPhsm(
-    pitemList.map((pitem) => pitem.itemData.phsm)
-  );
+  pitemList[0].itemData.phsm = pitemList[0].itemData.phsm.slice(-10);
+  console.log(pitemList);
+
+  // Merged phsm of all portfolio items. 
+  // Median is multiplied by count of items, so it shows historical total value of portfolio. 
+  // Volume is not multiplied, because it does not depend on user's count of items.
+  const combinedDataForCharts = mergeListOfPhsm(
+    pitemList.map((pitem) =>
+      pitem.itemData.phsm.map((dp) => ({
+        ...dp,
+        median: dp.median * pitem.count,
+      }))
+    )
+  ); 
 
   return (
     <Accordion type="single" collapsible className="w-full">
@@ -27,7 +38,7 @@ export function AccordionCharts({ pitemList }: AccordionChartsProps) {
         </AccordionTrigger>
         <AccordionContent>
           <ChartPrice
-            data={combinedData}
+            data={combinedDataForCharts}
             config={ChartConfigVolMed}
             className=""
             chartClassName=""
@@ -41,7 +52,7 @@ export function AccordionCharts({ pitemList }: AccordionChartsProps) {
         </AccordionTrigger>
         <AccordionContent>
           <ChartVolume
-            data={combinedData}
+            data={combinedDataForCharts}
             config={ChartConfigVolMed}
             className=""
             chartClassName=""
