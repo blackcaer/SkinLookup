@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import SearchBar from "@/app/ui/all/search-bar";
@@ -10,17 +10,33 @@ import { ChartConfigVolMed } from "@/app/ui/common/chart-configs";
 import { ItemData } from "@/app/ui/common/types";
 import { clearTokens, getToken } from "@/services/authServise";
 
-const ItemDetailsPage = () => {
+const ItemDetailsPageComp = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  let name = searchParams.get("name");
-  if (!name || name.trim() === "") router.push("/all");
-
+  const [name, setName] = useState<string | null>(searchParams.get("name"));
   const [itemData, setItemData] = useState<ItemData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isInPortfolio, setIsInPortfolio] = useState<boolean>(false);
 
   useEffect(() => {
+    const fetchRandomItemName = async () => {
+      const response = await fetch(`http://127.0.0.1:8000/api/random_item_name/`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("data: ",data);
+        setName(data["name"]);
+        router.replace(`/item_details?name=${data["name"]}`);
+        console.log("after router replace")
+      } else {
+        console.error("Failed to fetch random item name");
+      }
+    };
+
+    if (!name || name.trim() === "") {
+      console.log("fetch item name")
+      fetchRandomItemName();
+    }
+  
     const getItemData = async () => {
       try {
         const token = getToken();
@@ -42,9 +58,7 @@ const ItemDetailsPage = () => {
             window.location.reload();
             return;
           }
-          console.log(
-            `Bad status code: ${response.statusText} (${response.status})`
-          );
+          console.error(`Bad status code: ${response.statusText} (${response.status})`);
         }
       } catch (error) {
         console.error("Error fetching item data:", error);
@@ -52,8 +66,13 @@ const ItemDetailsPage = () => {
         setIsLoading(false);
       }
     };
-    getItemData();
-  }, [name]);
+
+    if (name) {
+      console.log("getItemData");
+      console.log("name: ",name);
+      getItemData();
+    }
+  }, [name,router]);
 
   return (
     <div>
@@ -80,5 +99,13 @@ const ItemDetailsPage = () => {
     </div>
   );
 };
+
+const ItemDetailsPage = () => {
+  return (
+    <Suspense>
+      <ItemDetailsPageComp/>
+    </Suspense>
+  )
+} // Page has to be in Suspense because of the useSearchParams hook
 
 export default ItemDetailsPage;
