@@ -81,9 +81,45 @@ Ommited files are automatically generated.
 
 
 /frontend/
-- a
-- b
-- c
+- app/ - My main app folder with frontend routes ui components layouts and pages
+    - (mainapp)/ - Directory for all of my routes
+        - (navigation)/ - Folder for routes using sidenav navigation
+            - about/ - 
+            - all/ - 
+            - compare/ - 
+            - item_details/ - 
+            - portfolio/ - 
+            - search/ - 
+            - layout.tsx - Layout with sidenav for all routes there
+        - login/
+            - page.tsx - Basic login page
+        - register/
+            - page.tsx - Basic register page
+    - ui/ - not routable folder for my ui components
+        - all/ - 
+        - charts/ - 
+        - common/ - 
+        - item_detail/ - 
+        - nav/ - 
+        - portfolio/ - 
+        - demo-data.tsx - 
+        - fonts.ts - 
+        - global.css - 
+    - favicon.ico - Icon
+    - layout.tsx - Root layout for entire project
+    - not-found.tsx - backup route for 404 errors
+    - page.tsx - "/" page, nothing special
+- components/ - UI components from shadcn
+    - Files were automatically generated, probably I changed some details in some of them, but 95% of it is not my code
+- lib/ - Also folder with utils.ts for shadcn
+- public/ - Directory static assets in a Next.js
+    - Contains some files with dummy data for development and some icons
+- services/ - Folder for services (this is the part of the project that I'm not proud of)
+    - authService.ts - Service for handling authentication-related tasks, such as login, logout, and user session management
+    - portfolioService.ts - Service for managing portfolio-related operations, including adding, removing, and fetching portfolio items
+- .gitignore - files and folders for git to ignore
+- next.config.ts - File with project configurations
+- package.json - File containing required packages
 
 
 
