@@ -89,7 +89,7 @@ export default function Page() {
       <PortfolioHeader pitemList={pitemList} />
 
       <div className="mb-6">
-        <AccordionCharts />
+        <AccordionCharts pitemList={pitemList}/>
       </div>
 
       <div>
