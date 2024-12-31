@@ -11,11 +11,13 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  const token = getToken();
-      if(token)
-        router.push("/all");
-    
+  useEffect(() => {
+    setIsLoggedIn(!!getToken());
+  }, []);
+
+  if (isLoggedIn) router.push("/all");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -50,7 +52,7 @@ const LoginPage: React.FC = () => {
         >
           <h2 className="text-xl font-semibold text-center">Login</h2>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          
+
           <label className="py-4">
             <p className="mb-2">Username:</p>
             <Input
@@ -69,9 +71,14 @@ const LoginPage: React.FC = () => {
               required
             />
           </label>
-          <Button type="submit" className="p-4 mt-2">Login</Button>
+          <Button type="submit" className="p-4 mt-2">
+            Login
+          </Button>
           <p className="text-center mt-4">
-            Don't have an account? <Link href="/register" className="text-blue-500">Register</Link>
+            Don't have an account?{" "}
+            <Link href="/register" className="text-blue-500">
+              Register
+            </Link>
           </p>
         </form>
       </div>

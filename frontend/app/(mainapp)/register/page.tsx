@@ -1,10 +1,11 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getToken } from "@/services/authServise";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useState } from "react";
-import { getToken } from "@/services/authServise";
+import React, { useState, useEffect } from "react";
 
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -13,8 +14,13 @@ const RegisterPage: React.FC = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const token = getToken();
-  if (token) router.push("/all");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!getToken());
+  }, []);
+
+  if (isLoggedIn) router.push("/all");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
