@@ -86,11 +86,11 @@ async def get_user_portfolio(request):
     if not await sync_to_async(permission.has_permission)(request, None):
         raise PermissionDenied("Authentication credentials were not provided.")
 
-    portfolio = await sync_to_async(list)(request.user.portfolio.all())
-
+    #portfolio = await sync_to_async(list)(request.user.portfolio.all())
+    portfolio = await sync_to_async(list)(request.user.portfolio.select_related('item_data__item').all())
     def update_item_sync(item):
-        """Synchroniczna aktualizacja dla jednego elementu."""
-        item.item_data.update_item()
+        if item.item_data:
+            item.item_data.update_item()
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         futures = [executor.submit(update_item_sync, item) for item in portfolio]
