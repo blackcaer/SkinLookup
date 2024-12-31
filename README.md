@@ -14,17 +14,17 @@ This implementation does not deviate from the course requirements, as TypeScript
 ## SkinLookup - introduction
 
 I've been working with Rust skins for few years now, it's been my hobby.
-I've made multiple tools for private use to calculate, aggregate and automate stuff related to Steam Market and Rust skins. I've always wanted to create something less technical and more graphical related to it, so using it would be not only be helpful but visually pleasing as well but I never had time for it.
+I’ve created several tools for personal use to calculate, aggregate, and automate tasks related to the Steam Market and Rust skins.  I've always wanted to create something less technical and more graphical related to it, so using it would be not only be helpful but visually pleasing as well but I never had time for it.
 
 This is the Final Project for Harvard's CS50W course - "Capstone".
 
-This web application allows You to browse through Rust skins, add them to portfolio, show details about them, show historical price/volume charts and more.
+This web application allows you to browse Rust skins, add them to your portfolio, view details, and display historical price/volume charts, among other features.
 
 ## Distinctiveness and Complexity
 
-My project is completely different than the other projects in this course, it's form and implementation has almost nothing in common with any of previous applications.
+My project is completely different from the other projects in this course, it's form and implementation has almost nothing in common with any of previous applications.
 
-SkinLookup is also much more complex than any of those projects. For first, it's tech stack is more sophisticated as it uses:
+SkinLookup is also significantly more complex than any of the other projects. For first, it's tech stack is more sophisticated as it uses:
 
 - **Next.js** as frontend framework _(beyond the scope of the course)_
 - **Tailwind CSS** for styling _(beyond the scope of the course)_
@@ -34,23 +34,23 @@ SkinLookup is also much more complex than any of those projects. For first, it's
 
 Another thing worth noting is usage of **external API** - [SCMM](rust.scmm.app/docs/) to get up-to-date price history of every skin on site.
 
-I'm also using skin preview images from Steam CDN (for example [this image](https://steamuserimages-a.akamaihd.net/ugc/2452862891801771581/B96690B4E46626858DF8FD93D59715427CE8267A/)). I've implemented several meaures to reduce load on those sites, especially SCMM since it's non-profit project maintained by good people.
+I'm also using skin preview images from Steam CDN (for example [this image](https://steamuserimages-a.akamaihd.net/ugc/2452862891801771581/B96690B4E46626858DF8FD93D59715427CE8267A/)). I've implemented several measures to reduce load on those sites, especially SCMM since it's non-profit project maintained by good people.
 
-This measures include:
+The measures taken include:
 
 - **Custom caching logic** on the backend for caching price data for adjustable period of time (ITEMDATA_EXPIRATION_HOURS)
   - This includes ItemData model
-  - Automatic backend side data fetching - if cache has expired it fetched newest data automatically (and saves it)
+  - Automatic backend-side data fetching - if cache has expired it fetched newest data automatically (and saves it)
   - Lazy loading - data is refreshed only when needed
   - Adjustable size of requested price history (lowered for development time - MAX_DAYS_PHSM)
 - Using long **cache for images** (minimumCacheTTL) in Next.js config
 - **Pagination** of site with all items, reducing amount of image requests
-- Using fixed previously scraped item dataset which does include only subset of all (~4400) Rust items
+- Using a fixed, previously scraped dataset that includes only a subset of all (~4400) Rust items
 
 Other features:
 
-- Implemented **debouncer** for adding items in portfolio to reduce load on backend
-- **Asynchronous** portfolio item data update on the backend side
+- Implemented a **debouncer** for adding items to the portfolio to reduce backend load
+- **Asynchronous** portfolio item data update on the backend-side
 - Implemented **short circuit mechanism** for searching to also reduce load on backend
   - Search bar is only displaying 10 results at a time so I keep other results that I've got from backend and try to filter those to get another 10 results. Only if I get less than that I send request to backend for more
 - **Charts** with price history, volume history and summed up price history of group of items
@@ -75,7 +75,7 @@ Ommited files are automatically generated.
   - admin.py - Models registered for admin panel
   - models.py - Models for my application (Item, ItemData, PortfolioItem, User)
   - serializers.py - Serializers for my app
-  - services.py - Helper functions, (probably I should implement all of them on models or move them to some utils.py file)
+  - services.py - Helper functions, (probably I should implement all of them in the models or move them to a utils.py file)
   - tests.py - Tests for backend
   - urls.py - routing for the application (api routes)
   - views.py - Views handling incoming requests
@@ -141,7 +141,7 @@ Ommited files are automatically generated.
 - lib/ - Also folder with utils.ts for shadcn
 - public/ - Directory static assets in a Next.js
   - Contains some files with dummy data for development and some icons
-- services/ - Folder for services (this is the part of the project that I'm not proud of)
+- services/ - Folder for services (this is the part of the project that I’m not entirely satisfied with)
   - authService.ts - Service for handling authentication-related tasks, such as login, logout, and user session management
   - portfolioService.ts - Service for managing portfolio-related operations, including adding, removing, and fetching portfolio items
 - .gitignore - files and folders for git to ignore
@@ -158,16 +158,13 @@ Do it in cmd instead of powershell.
 
 - `cd backend`
 
-- Create virtual enviroment: `python -m venv venv`
+- Create virtual environment: `python -m venv venv`
 
-- Activate virtual enviroment: `".\venv\scripts\activate"`  
+- Activate virtual environment: `".\venv\scripts\activate"`  
 (if it's not activating try using cmd instead of powershell)
 
 - If (venv) is present before your directory in terminal, install required packages:
 `pip install -r requirements.txt`
-
-- ~~Migrate django db if needed:
-`python manage.py migrate`~~
 
 - Run Django server:
 `python manage.py runserver`
@@ -184,7 +181,7 @@ Do it in cmd instead of powershell.
 
 - Start app: `npm run start`
 
-- If doesn't work for some reason run in developement mode\*: `npm run dev`
+- If doesn't work for some reason run in development mode\*: `npm run dev`
 
 - Server should run at http://localhost:3000
 
@@ -194,4 +191,4 @@ Do it in cmd instead of powershell.
 
 ## Other info
 
-This project is not perfect and my TODO list is still quite huge. There was many things that I did for a first time or testing if they are beneficial to my work and project management, so there are some not polished files of course. But overall I'm satisfied with the results and how efficient I was while implementing it.
+This project is not perfect and my TODO list is still quite large. There was many things that I did for a first time or testing if they are beneficial to my work and project management, so there are some not polished files of course. But overall I'm satisfied with the results and how efficient I was while implementing it.
