@@ -76,9 +76,9 @@ const ItemDetailsPageComp = () => {
 
   return (
     <div>
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <SearchBar />
-      </div>
+      </div> */}
 
       <div className="flex flex-col gap-6">
         {isLoading ? (

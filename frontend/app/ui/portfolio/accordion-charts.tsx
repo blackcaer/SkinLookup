@@ -62,8 +62,8 @@ export function AccordionCharts({ pitemList }: AccordionChartsProps) {
       </AccordionItem>
 
       <AccordionItem value="item-3">
-        <AccordionTrigger>Some other info</AccordionTrigger>
-        <AccordionContent>there is info</AccordionContent>
+        <AccordionTrigger>Did you know</AccordionTrigger>
+        <AccordionContent>Did you know that those charts are dynamically updating whenever you change your portfolio items?</AccordionContent>
       </AccordionItem>
     </Accordion>
   );
