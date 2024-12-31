@@ -1,3 +1,4 @@
+import concurrent.futures
 import random
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +9,8 @@ from .serializers import ItemSerializer, ItemDataSerializer, LogoutSerializer, P
 from .services import get_item_data, filter_items
 from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken
+from asgiref.sync import sync_to_async
+from adrf.decorators import api_view as api_view_adrf
 
 
 @api_view(['GET'])
@@ -51,7 +54,7 @@ def get_item_details(request):
         return Response({"error": "Nameid has to be number"}, status=400)
 
     item_data = get_item_data(name=name, name_id=name_id)
-    if item_data:
+    if (item_data):
         serializer = ItemDataSerializer(item_data)
 
         is_in_portfolio = False
@@ -76,10 +79,20 @@ def get_matching_names(request, query):
     return Response(names)
 
 
-@api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_user_portfolio(request):
-    portfolio = request.user.portfolio.all()
+@api_view_adrf(['GET'])
+async def get_user_portfolio(request):
+    portfolio = await sync_to_async(list)(request.user.portfolio.all())
+
+    def update_item_sync(item):
+        """Synchroniczna aktualizacja dla jednego elementu."""
+        item.item_data.update_item()
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(update_item_sync, item)
+                   for item in portfolio]
+        concurrent.futures.wait(futures)
+
     serialized_portfolio = PortfolioItemSerializer(portfolio, many=True)
     return Response(serialized_portfolio.data)
 
@@ -108,7 +121,7 @@ def set_portfolio_item_count(request):
 
     item_data, created = ItemData.objects.get_or_create(item=item)
 
-    item_data.force_update_data()
+    item_data.update_item()
 
     if count == 0:
         PortfolioItem.objects.filter(

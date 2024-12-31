@@ -1,11 +1,12 @@
 from datetime import timedelta
+import time
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import datetime, timedelta
 import requests
 
-MAX_DAYS_PHSM = 30  # Max days of price history to fetched from api. -1 means all data
+MAX_DAYS_PHSM = -1  # Max days of price history to fetched from api. -1 means all data
 ITEMDATA_EXPIRATION_HOURS = 24
 
 
@@ -93,11 +94,15 @@ class ItemData(models.Model):
         return self.time_refreshed < timezone.now() - timedelta(hours=hours)
 
     def force_update_data(self):
+        print(f"Updating {self.item.name} data")
+        start_time = time.time()
         try:
             self.phsm = self._get_phsm_from_api(max_days_phsm=MAX_DAYS_PHSM)
         except requests.HTTPError as e:
             print(f"Error getting phsm for {self.item.name}: ", e)
             return
+        finally:
+            print(f"Updating {self.item.name} data took {time.time() - start_time :.2f} seconds")
         self.time_refreshed = timezone.now()
         self.save()
 
@@ -107,7 +112,9 @@ class ItemData(models.Model):
     def update_item(self):
         try:
             if self.is_older_than(hours=ITEMDATA_EXPIRATION_HOURS):
-                self.force_update_data()
+                
+                self.force_update_data()   
+                 
                 return {"status": 204, "message": "Item has been updated"}
             else:
                 return {"status": 304, "message": "Item is up to date"}
