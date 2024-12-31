@@ -9,17 +9,20 @@ from .services import get_item_data, filter_items
 from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def is_authenticated_view(request):
     return Response({"detail": "User is authenticated"}, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 def get_all_items(request):
     name = request.GET.get('name')
     item_type = request.GET.get('itemType')
     item_collection = request.GET.get('itemCollection')
-    items = filter_items(name=name, item_type=item_type, item_collection=item_collection)
+    items = filter_items(name=name, item_type=item_type,
+                         item_collection=item_collection)
     serializer = ItemSerializer(items, many=True)
 
     portfolio_items = []
@@ -36,6 +39,7 @@ def get_all_items(request):
 
     return Response(response_data)
 
+
 @api_view(['GET'])
 def get_item_details(request):
     name_id = request.GET.get('nameId')
@@ -45,14 +49,15 @@ def get_item_details(request):
         return Response({"error": "No identifier provided"}, status=400)
     elif name_id and not name_id.isdigit():
         return Response({"error": "Nameid has to be number"}, status=400)
-    
+
     item_data = get_item_data(name=name, name_id=name_id)
     if item_data:
         serializer = ItemDataSerializer(item_data)
 
         is_in_portfolio = False
         if request.user.is_authenticated:
-            is_in_portfolio = request.user.portfolio.filter(item_data=item_data).exists()
+            is_in_portfolio = request.user.portfolio.filter(
+                item_data=item_data).exists()
 
         response_data = {
             "item": serializer.data,
@@ -63,11 +68,13 @@ def get_item_details(request):
     else:
         return Response({"error": "Item not found"}, status=404)
 
+
 @api_view(['GET'])
 def get_matching_names(request, query):
     items = filter_items(name=query)
     names = [item['name'] for item in items.values('name')[:10]]
     return Response(names)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -75,6 +82,7 @@ def get_user_portfolio(request):
     portfolio = request.user.portfolio.all()
     serialized_portfolio = PortfolioItemSerializer(portfolio, many=True)
     return Response(serialized_portfolio.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -92,7 +100,7 @@ def set_portfolio_item_count(request):
 
     if count < 0:
         count = 0
-        
+
     try:
         item = Item.objects.get(name=name)
     except Item.DoesNotExist:
@@ -103,7 +111,8 @@ def set_portfolio_item_count(request):
     item_data.force_update_data()
 
     if count == 0:
-        PortfolioItem.objects.filter(user=request.user, item_data=item_data).delete()
+        PortfolioItem.objects.filter(
+            user=request.user, item_data=item_data).delete()
         return Response({"message": "Portfolio item deleted"}, status=status.HTTP_204_NO_CONTENT)
     else:
         portfolio_item, created = PortfolioItem.objects.update_or_create(
@@ -113,6 +122,7 @@ def set_portfolio_item_count(request):
         )
         return Response({"message": "Portfolio item updated"}, status=status.HTTP_200_OK)
 
+
 @api_view(['GET'])
 def get_random_item_name(request):
     items = Item.objects.all()
@@ -121,9 +131,11 @@ def get_random_item_name(request):
     random_item = random.choice(items)
     return Response({"name": random_item.name}, status=status.HTTP_200_OK)
 
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
 
 class LogoutView(generics.GenericAPIView):
     permission_classes = (IsAuthenticated,)

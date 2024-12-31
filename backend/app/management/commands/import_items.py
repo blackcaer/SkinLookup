@@ -32,9 +32,11 @@ class Command(BaseCommand):
 
                 for entry in data:
                     try:
-                        time_accepted = datetime.strptime(entry['timeAccepted'], '%d/%m/%Y').date()
+                        time_accepted = datetime.strptime(
+                            entry['timeAccepted'], '%d/%m/%Y').date()
                     except ValueError:
-                        self.stderr.write(self.style.ERROR(f"Invalid date format for {entry['name']}"))
+                        self.stderr.write(self.style.ERROR(
+                            f"Invalid date format for {entry['name']}"))
                         continue
 
                     item_data = {
@@ -51,17 +53,21 @@ class Command(BaseCommand):
 
                     # Użycie update_or_create, aby zaktualizować istniejący obiekt lub utworzyć nowy
                     item, created = Item.objects.update_or_create(
-                        nameId=entry['nameId'],  # Warunek szukania istniejącego obiektu
+                        # Warunek szukania istniejącego obiektu
+                        nameId=entry['nameId'],
                         defaults=item_data  # Dane do aktualizacji lub utworzenia
                     )
 
                     if created:
-                        self.stdout.write(self.style.SUCCESS(f'Created new item: {item.name}'))
+                        self.stdout.write(self.style.SUCCESS(
+                            f'Created new item: {item.name}'))
                     else:
-                        self.stdout.write(self.style.SUCCESS(f'Updated item: {item.name}'))
+                        self.stdout.write(self.style.SUCCESS(
+                            f'Updated item: {item.name}'))
 
                     items_imported += 1
 
-                self.stdout.write(self.style.SUCCESS(f'Successfully imported {items_imported} items from {file_path}'))
+                self.stdout.write(self.style.SUCCESS(
+                    f'Successfully imported {items_imported} items from {file_path}'))
         except Exception as e:
             self.stderr.write(self.style.ERROR(f'Error: {e}'))

@@ -7,6 +7,7 @@ from datetime import timedelta
 from .models import Item, ItemData, PortfolioItem, User
 from .services import get_item_data, filter_items
 
+
 class ItemModelTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -57,7 +58,8 @@ class ItemModelTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_item_details_not_found(self):
-        response = self.client.get(reverse('get_item_details'), {'nameId': 999})
+        response = self.client.get(
+            reverse('get_item_details'), {'nameId': 999})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_item_details_no_identifier(self):
@@ -65,9 +67,11 @@ class ItemModelTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_get_item_details_invalid_nameid(self):
-        response = self.client.get(reverse('get_item_details'), {'nameId': 'invalid'})
+        response = self.client.get(
+            reverse('get_item_details'), {'nameId': 'invalid'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['error'], "Nameid has to be number")
+
 
 class ItemDataModelTest(TestCase):
 
@@ -94,11 +98,13 @@ class ItemDataModelTest(TestCase):
         self.assertFalse(ItemData.objects.filter(item=self.item).exists())
 
     def test_is_older_than(self):
-        self.item_data.time_refreshed = timezone.now() - timedelta(hours=25)  # Updated field name
+        self.item_data.time_refreshed = timezone.now(
+        ) - timedelta(hours=25)  # Updated field name
         self.item_data.save()
         self.assertTrue(self.item_data.is_older_than(hours=24))
 
-        self.item_data.time_refreshed = timezone.now() - timedelta(hours=23)  # Updated field name
+        self.item_data.time_refreshed = timezone.now(
+        ) - timedelta(hours=23)  # Updated field name
         self.item_data.save()
         self.assertFalse(self.item_data.is_older_than(hours=24))
 
@@ -150,9 +156,11 @@ class ItemDataModelTest(TestCase):
         self.assertIsNone(item_data.price_newest)
         self.assertIsNone(item_data.price_week_ago)
 
+
 class PortfolioItemModelTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345')
         self.item = Item.objects.create(
             nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
@@ -171,16 +179,20 @@ class PortfolioItemModelTest(TestCase):
         self.assertEqual(PortfolioItem.objects.count(), 1)
 
     def test_portfolio_item_existence(self):
-        self.assertTrue(PortfolioItem.objects.filter(item_data=self.item_data).exists())
+        self.assertTrue(PortfolioItem.objects.filter(
+            item_data=self.item_data).exists())
 
     def test_portfolio_item_deletion(self):
         self.portfolio_item.delete()
-        self.assertFalse(PortfolioItem.objects.filter(item_data=self.item_data).exists())
+        self.assertFalse(PortfolioItem.objects.filter(
+            item_data=self.item_data).exists())
+
 
 class UserModelTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345')
         self.item = Item.objects.create(
             nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
@@ -202,50 +214,63 @@ class UserModelTest(TestCase):
         self.assertEqual(self.user.portfolio.count(), 1)
 
     def test_user_portfolio_item_existence(self):
-        self.assertTrue(self.user.portfolio.filter(item_data=self.item_data).exists())
+        self.assertTrue(self.user.portfolio.filter(
+            item_data=self.item_data).exists())
 
     def test_user_deletion(self):
         self.user.delete()
         self.assertFalse(User.objects.filter(username='testuser').exists())
 
     def test_user_login(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'})
+        response = self.client.post(reverse('token_obtain_pair'), {
+                                    'username': 'testuser', 'password': '12345'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
 
         # Check if the user is authenticated
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data['access'])
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Bearer ' + response.data['access'])
         auth_response = self.client.get(reverse('is_authenticated'))
         self.assertEqual(auth_response.status_code, status.HTTP_200_OK)
-        self.assertTrue(auth_response.data['detail'] == "User is authenticated")
+        self.assertTrue(
+            auth_response.data['detail'] == "User is authenticated")
 
     def test_user_login_invalid_credentials(self):
-        response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': 'wrongpassword'})
+        response = self.client.post(reverse('token_obtain_pair'), {
+                                    'username': 'testuser', 'password': 'wrongpassword'})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('detail', response.data)
 
     def test_user_register(self):
-        response = self.client.post(reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
+        response = self.client.post(
+            reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(User.objects.filter(username='newuser').exists())
 
     def test_user_logout(self):
-        login_response = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'})
+        login_response = self.client.post(reverse('token_obtain_pair'), {
+                                          'username': 'testuser', 'password': '12345'})
         refresh_token = login_response.data['refresh']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
-        logout_response = self.client.post(reverse('logout'), {'refresh': refresh_token})
-        self.assertEqual(logout_response.status_code, status.HTTP_204_NO_CONTENT)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        logout_response = self.client.post(
+            reverse('logout'), {'refresh': refresh_token})
+        self.assertEqual(logout_response.status_code,
+                         status.HTTP_204_NO_CONTENT)
 
         # Ensure the token is blacklisted and cannot be used again
-        response = self.client.post(reverse('token_refresh'), {'refresh': refresh_token})
+        response = self.client.post(reverse('token_refresh'), {
+                                    'refresh': refresh_token})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('detail', response.data)
 
         # Check if the user is logged out
         self.client.credentials()
         auth_response = self.client.get(reverse('is_authenticated'))
-        self.assertEqual(auth_response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(auth_response.status_code,
+                         status.HTTP_401_UNAUTHORIZED)
+
 
 class ServicesTest(TestCase):
 
@@ -271,10 +296,12 @@ class ServicesTest(TestCase):
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].name, 'Forest Raiders Locker')
 
+
 class ViewsTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.user = User.objects.create_user(
+            username='testuser', password='12345')
         self.item = Item.objects.create(
             nameId=176460408, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
             name="Forest Raiders Locker", previewUrl="https://example.com/1",
@@ -288,7 +315,8 @@ class ViewsTest(TestCase):
         self.portfolio_item = PortfolioItem.objects.create(
             user=self.user, item_data=self.item_data, count=5
         )
-        self.token = self.client.post(reverse('token_obtain_pair'), {'username': 'testuser', 'password': '12345'}).data['access']
+        self.token = self.client.post(reverse('token_obtain_pair'), {
+                                      'username': 'testuser', 'password': '12345'}).data['access']
 
     def test_get_all_items_unauthenticated(self):
         response = self.client.get(reverse('get_all_items'))
@@ -303,10 +331,12 @@ class ViewsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('items', response.data)
         self.assertIn('names_in_portfolio', response.data)
-        self.assertEqual(response.data['names_in_portfolio'], ['Forest Raiders Locker'])
+        self.assertEqual(response.data['names_in_portfolio'], [
+                         'Forest Raiders Locker'])
 
     def test_get_item_details_unauthenticated(self):
-        response = self.client.get(reverse('get_item_details'), {'nameId': 176460408})
+        response = self.client.get(
+            reverse('get_item_details'), {'nameId': 176460408})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('item', response.data)
         self.assertIn('is_in_portfolio', response.data)
@@ -314,7 +344,8 @@ class ViewsTest(TestCase):
 
     def test_get_item_details_authenticated(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
-        response = self.client.get(reverse('get_item_details'), {'nameId': 176460408})
+        response = self.client.get(
+            reverse('get_item_details'), {'nameId': 176460408})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('item', response.data)
         if response.data['item']:
@@ -336,41 +367,51 @@ class ViewsTest(TestCase):
         response = self.client.get(reverse('get_user_portfolio'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['item_data']['item']['name'], 'Forest Raiders Locker')
+        self.assertEqual(response.data[0]['item_data']
+                         ['item']['name'], 'Forest Raiders Locker')
         self.assertEqual(response.data[0]['count'], 5)
 
     def test_set_portfolio_item_count_unauthenticated(self):
-        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 10})
+        response = self.client.post(reverse('set_portfolio_item_count'), {
+                                    'name': 'Forest Raiders Locker', 'count': 10})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_set_portfolio_item_count_authenticated(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
-        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 10})
+        response = self.client.post(reverse('set_portfolio_item_count'), {
+                                    'name': 'Forest Raiders Locker', 'count': 10})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['message'], 'Portfolio item updated')
-        portfolio_item = PortfolioItem.objects.get(user=self.user, item_data=self.item_data)
+        portfolio_item = PortfolioItem.objects.get(
+            user=self.user, item_data=self.item_data)
         self.assertEqual(portfolio_item.count, 10)
 
     def test_set_portfolio_item_count_delete(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
-        response = self.client.post(reverse('set_portfolio_item_count'), {'name': 'Forest Raiders Locker', 'count': 0})
+        response = self.client.post(reverse('set_portfolio_item_count'), {
+                                    'name': 'Forest Raiders Locker', 'count': 0})
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(PortfolioItem.objects.filter(user=self.user, item_data=self.item_data).exists())
+        self.assertFalse(PortfolioItem.objects.filter(
+            user=self.user, item_data=self.item_data).exists())
+
 
 class UserRegistrationTest(TestCase):
     def setUp(self):
         self.client = APIClient()
 
     def test_register_user(self):
-        response = self.client.post(reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
+        response = self.client.post(
+            reverse('register'), {'username': 'newuser', 'password': 'newpassword'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(User.objects.filter(username='newuser').exists())
 
     def test_register_user_missing_fields(self):
-        response = self.client.post(reverse('register'), {'username': 'newuser'})
+        response = self.client.post(
+            reverse('register'), {'username': 'newuser'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_register_user_existing_username(self):
         User.objects.create_user(username='existinguser', password='password')
-        response = self.client.post(reverse('register'), {'username': 'existinguser', 'password': 'newpassword'})
+        response = self.client.post(
+            reverse('register'), {'username': 'existinguser', 'password': 'newpassword'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

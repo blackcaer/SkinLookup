@@ -2,9 +2,11 @@ from rest_framework import serializers
 from .models import Item, ItemData, PortfolioItem, User
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 class CustomDateField(serializers.DateField):
     def to_representation(self, value):
         return value.strftime('%d/%m/%Y')
+
 
 class ItemSerializer(serializers.ModelSerializer):
     timeAccepted = CustomDateField()
@@ -12,6 +14,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = '__all__'
+
 
 class ItemDataSerializer(serializers.ModelSerializer):
     item = ItemSerializer()
@@ -23,11 +26,14 @@ class ItemDataSerializer(serializers.ModelSerializer):
         model = ItemData
         fields = ['item', 'timeRefreshed', 'priceWeekAgo', 'priceNow', 'phsm']
 
+
 class PortfolioItemSerializer(serializers.ModelSerializer):
     item_data = ItemDataSerializer()
+
     class Meta:
         model = PortfolioItem
-        fields = ['item_data','count']
+        fields = ['item_data', 'count']
+
 
 class UserSerializer(serializers.ModelSerializer):
     portfolio = PortfolioItemSerializer(many=True, read_only=True)
@@ -35,6 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -49,6 +56,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+
 
 class LogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
