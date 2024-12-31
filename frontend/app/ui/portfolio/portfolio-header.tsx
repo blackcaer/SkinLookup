@@ -11,9 +11,6 @@ export default function PortfolioHeader({pitemList}:PortfolioHeaderProps) {
   const sumPriceNow = pitemList.reduce((sum, currentPItem) => sum + currentPItem.count*(currentPItem.itemData.priceNow||0), 0);
   const sumPriceStore = pitemList.reduce((sum, currentPItem) => sum + currentPItem.count*currentPItem.itemData.item.storePrice, 0);
   const sumPriceProfit = 100*(sumPriceNow - sumPriceStore)/sumPriceStore;
-  // console.log(pitemList)
-  // console.log("sumPriceWeekAgo", sumPriceWeekAgo);
-  // console.log("sumPriceNow",sumPriceNow);
   const weeklyChange = (100*(sumPriceNow-sumPriceWeekAgo)/sumPriceNow);
 
   return (  

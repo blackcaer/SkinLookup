@@ -1,22 +1,20 @@
-'use client';
-    
+"use client";
+
 import { FC, useState, useCallback } from "react";
 import { ItemInfo } from "@/app/ui/common/types";
 import {
-    PlusIcon,
-    MinusIcon,
-    TrashIcon,
-    MagnifyingGlassCircleIcon,
-    MagnifyingGlassIcon
-  } from "@heroicons/react/24/outline";
+  PlusIcon,
+  MinusIcon,
+  TrashIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import ItemPreviewBase from "../all/item-preview-base";
 import Link from "next/link";
-
 
 interface PortfolioItemPreviewProps {
   item: ItemInfo;
   count?: number;
-  onChangeCount: (count:number) => void;
+  onChangeCount: (count: number) => void;
 }
 
 const debounce = (func: (...args: any[]) => void, delay: number) => {
@@ -29,7 +27,11 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
   };
 };
 
-const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onChangeCount }) => {
+const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({
+  item,
+  count,
+  onChangeCount,
+}) => {
   const [itemCount, setItemCount] = useState(count || 1);
   const debouncedOnChangeCount = useCallback(debounce(onChangeCount, 400), []);
 
@@ -56,19 +58,37 @@ const PortfolioItemPreview: FC<PortfolioItemPreviewProps> = ({ item, count, onCh
 
   return (
     <div className="relative flex flex-col w-[240px] h-[300px] border border-gray-300 rounded-lg shadow-lg group">
-      <ItemPreviewBase item={{ ...item, name: formattedItemName }}/>
-      
+      <ItemPreviewBase item={{ ...item, name: formattedItemName }} />
+
       <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-90 transition-opacity flex items-center justify-center rounded-lg">
-        
         <div className="flex flex-col text-white items-center justify-center gap-3">
           <form>
-            <button type="button" className="h-12 w-12" onClick={handleIncrease}><PlusIcon/></button>
-            <button type="button" className="h-12 w-12" onClick={handleDecrease}><MinusIcon/></button>
-            <button type="button" className="h-12 w-12" onClick={handleDelete}><TrashIcon/></button>
+            <button
+              type="button"
+              className="h-12 w-12"
+              onClick={handleIncrease}
+            >
+              <PlusIcon />
+            </button>
+            <button
+              type="button"
+              className="h-12 w-12"
+              onClick={handleDecrease}
+            >
+              <MinusIcon />
+            </button>
+            <button type="button" className="h-12 w-12" onClick={handleDelete}>
+              <TrashIcon />
+            </button>
           </form>
         </div>
         <Link href={`/item_details?name=${item.name}`}>
-        <button type="button" className="h-8 w-8 absolute inset-4  text-white"><MagnifyingGlassIcon/></button>
+          <button
+            type="button"
+            className="h-8 w-8 absolute inset-4  text-white"
+          >
+            <MagnifyingGlassIcon />
+          </button>
         </Link>
       </div>
     </div>
