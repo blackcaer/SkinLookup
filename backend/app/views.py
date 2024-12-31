@@ -11,7 +11,8 @@ from rest_framework import generics
 from rest_framework_simplejwt.tokens import RefreshToken
 from asgiref.sync import sync_to_async
 from adrf.decorators import api_view as api_view_adrf
-
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -79,9 +80,12 @@ def get_matching_names(request, query):
     return Response(names)
 
 
-@permission_classes([IsAuthenticated])
 @api_view_adrf(['GET'])
 async def get_user_portfolio(request):
+    permission = IsAuthenticated()
+    if not await sync_to_async(permission.has_permission)(request, None):
+        raise PermissionDenied("Authentication credentials were not provided.")
+
     portfolio = await sync_to_async(list)(request.user.portfolio.all())
 
     def update_item_sync(item):
@@ -89,8 +93,7 @@ async def get_user_portfolio(request):
         item.item_data.update_item()
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(update_item_sync, item)
-                   for item in portfolio]
+        futures = [executor.submit(update_item_sync, item) for item in portfolio]
         concurrent.futures.wait(futures)
 
     serialized_portfolio = PortfolioItemSerializer(portfolio, many=True)

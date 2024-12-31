@@ -13,7 +13,7 @@ class ItemModelTest(TestCase):
         self.client = APIClient()
         self.item1 = Item.objects.create(
             nameId=1, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
-            name="Some item", previewUrl="https://example.com/1",
+            name="Alien red", previewUrl="https://example.com/1",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
         phsm_data = [
@@ -25,7 +25,7 @@ class ItemModelTest(TestCase):
         )
         self.item2 = Item.objects.create(
             nameId=2, appId=252490, itemType="Locker", itemCollection="Forest Raiders",
-            name="Some item 2", previewUrl="https://example.com/2",
+            name="Press Vest", previewUrl="https://example.com/2",
             supplyTotalEstimated=29888, timeAccepted="2024-03-10", storePrice=2.49
         )
 
@@ -360,7 +360,7 @@ class ViewsTest(TestCase):
 
     def test_get_user_portfolio_unauthenticated(self):
         response = self.client.get(reverse('get_user_portfolio'))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_user_portfolio_authenticated(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)

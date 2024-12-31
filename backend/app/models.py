@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import requests
 
 MAX_DAYS_PHSM = -1  # Max days of price history to fetched from api. -1 means all data
-ITEMDATA_EXPIRATION_HOURS = 24
+ITEMDATA_EXPIRATION_HOURS =  24
 
 
 class Item(models.Model):
