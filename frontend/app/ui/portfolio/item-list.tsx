@@ -33,7 +33,9 @@ const ItemList: React.FC<ItemListProps> = ({
         {pitemList.length} shown positions{" "}
       </div>
       <div className="flex flex-col flex-wrap sm:flex-row gap-4 md:overflow-hidden justify-center items-center">
-        {pitemList.map(({ itemData, count }) => (
+        {pitemList.length === 0? "Your portfolio is empty": 
+        (
+        pitemList.map(({ itemData, count }) => (
           <PortfolioItemPreview
             key={itemData.item.nameId}
             item={itemData.item}
@@ -42,7 +44,7 @@ const ItemList: React.FC<ItemListProps> = ({
               handleOnChangeCount(itemData.item.name, count)
             }
           />
-        ))}
+        )))}
       </div>
     </div>
   );

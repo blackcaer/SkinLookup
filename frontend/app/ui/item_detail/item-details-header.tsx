@@ -43,13 +43,14 @@ export default function ItemDetailHeader({
     <div className="flex flex-row justify-center flex-wrap gap-4">
       <Link href="" className="flex flex-row">
         {isLoading && (
-          <Skeleton
-            height={400}
-            width={400}
-            className={`absolute top-0 left-0 rounded-lg shadow-xl ${
-              isLoading ? "block" : "hidden pointer-events-none"
-            }`}
-          />
+          // <Skeleton
+          //   height={400}
+          //   width={400}
+          //   className={`absolute top-0 left-0 rounded-lg shadow-xl ${
+          //     isLoading ? "block" : "hidden pointer-events-none"
+          //   }`}
+          // />
+          " "
         )}
         <Image
           src={item.previewUrl || "/default.png"}
