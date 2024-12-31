@@ -26,6 +26,7 @@ SkinLookup is also much more complex than any of those projects. For first, it's
 
 - **Next.js** as frontend framework *(beyond the scope of the course)*
 - **Tailwind CSS** for styling *(beyond the scope of the course)*
+- **Shadcn** for components and **Heroicons** for icons *(beyond the scope of the course)*
 - **Django Rest Framework** as backend framework *(beyond the scope of the course)*
 - **SQLite** as a database 
 
@@ -55,12 +56,14 @@ Other features:
 - And more
 
 ## File documentation
+"What’s contained in each file you created"
 
 Ommited files are automatically generated.
 
 /backend/
 - app/ - Django aplication with project's backend
-    - management/
+    - management/commands/ - Commands for managing project
+        - import_items.py - Command allowing me to import item definitions (from /data/ directory)
     - migrations/ - Automatically generated migration files
     - admin.py - Models registered for admin panel
     - models.py - Models for my application (Item, ItemData, PortfolioItem, User)
@@ -75,7 +78,7 @@ Ommited files are automatically generated.
 - skin_lookup/ - Django project directory. Most of files there are automatically generated
     - urls.py - main backend routing file
     - settings.py - setting for django application
-- .gitignore - filed and folders for git to ignore
+- .gitignore - files and folders for git to ignore
 - db.sqlite3 - SQLite database for project
 - requirements.txt - required python packages for the project
 
@@ -139,12 +142,43 @@ Ommited files are automatically generated.
 - package.json - File containing required packages
 
 
-
-
 ## How to run
 
 
+Backend server:
+
+`cd backend`
+
+Create virtual enviroment: `python -m venv venv` 
+
+Activate virtual enviroment: `.\venv\scripts\activate `  
+(if it's not activating try using cmd instead of powershell)
+
+If (venv) is present before your directory in terminal, install required packages: 
+`pip install requirements.txt`
+
+~~Migrate django db if needed:
+`python manage.py migrate`~~
+
+Run Django server: 
+`python runserver`
+
+Server should run on http://127.0.0.1:8000/
+
+Frontend server: (in other console):
+
+`cd frontend/`
+
+Install required packages: `npm install`
+
+Create build: `npm run build`
+
+Start app: `npm run start`
+
+If doesn't work for some reason run in developement mode*: `npm run dev`
+
+*-Development is faster to run but switching between sites might take longed due to jit compiling. If you click through routes and wait for 10-20s it should be faster
 
 ## Other info
-tech stack?
-scmm use (api)
+
+This project is not perfect and my TODO list is still quite huge. There was many things that I did for a first time or testing if they are beneficial to my work and project management, so there are some not polished files of course. But overall I'm satisfied with the results and how efficient I was while implementing it.
