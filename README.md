@@ -84,28 +84,45 @@ Ommited files are automatically generated.
 - app/ - My main app folder with frontend routes ui components layouts and pages
     - (mainapp)/ - Directory for all of my routes
         - (navigation)/ - Folder for routes using sidenav navigation
-            - about/ - 
-            - all/ - 
-            - compare/ - 
-            - item_details/ - 
-            - portfolio/ - 
-            - search/ - 
+            - about/page.tsx - Page file for route about/
+            - all/page.tsx - Page file for route all/
+            - compare/page.tsx - Page file for route compare/ - I'm not sure if I will implement it, but it's somewhere on TODO list
+            - item_details/page.tsx - Page file for route about/
+            - portfolio/page.tsx - Page file for route portfolio/
+            - search/page.tsx - Page file for route search/
             - layout.tsx - Layout with sidenav for all routes there
         - login/
             - page.tsx - Basic login page
         - register/
             - page.tsx - Basic register page
-    - ui/ - not routable folder for my ui components
-        - all/ - 
-        - charts/ - 
-        - common/ - 
-        - item_detail/ - 
-        - nav/ - 
-        - portfolio/ - 
-        - demo-data.tsx - 
-        - fonts.ts - 
-        - global.css - 
-    - favicon.ico - Icon
+        - ui/ - Not routable folder for my UI components
+            - all/ - Components mainly for all/ route
+                - all-item-list.tsx - Component displaying all items at all/ route
+                - item-preview-base.tsx - Base of item preview components
+                - item-preview.tsx - Item preview component for all/ directory
+                - search-bar.tsx - Search bar component
+            - charts/ - Components for rendering charts
+                - chart-price.tsx - Chart displaying item price
+                - chart-volume.tsx - Chart displaying item volume
+            - common/ - Shared utility components and configurations.
+                - chart-configs.tsx - Reusable chart configs
+                - types.tsx - Typescript interfaces shared across frontend
+            - item_detail/ - Components mainly for item_details/ route
+                - item-details-header.tsx - For rendering header of item detail route
+            - nav/ - Components for navigation elements
+                - nav-links.tsx - File with links to show on sidenav
+                - sidenav.tsx - Sidenav component displaying links from nav-links
+                - some-logo.tsx - File with logo component
+            - portfolio/ - Components mainly for portfolio/ route
+                - accordion-charts.tsx - Component for displaying charts in accordion component
+                - card-info.tsx - Component for custom card info displaying 
+                - item-list.tsx - Portfolio item list
+                - portfolio-header.tsx - Portfolio header containing card-info components
+                - portfolio-item-preview.tsx - Portfolio item preview component based on all/item-preview-base.tsx
+                - utils.ts - Utility functions for portfolio
+        - fonts.ts - File with fonts used
+        - global.css - Global css styles
+    - favicon.ico - App icon
     - layout.tsx - Root layout for entire project
     - not-found.tsx - backup route for 404 errors
     - page.tsx - "/" page, nothing special
