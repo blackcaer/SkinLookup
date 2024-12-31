@@ -5,11 +5,15 @@ import SomeLogo from '@/app/ui/nav/some-logo';
 import { PowerIcon,ArrowRightEndOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { getToken, logOut } from '@/services/authServise';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 export default function SideNav() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!getToken());
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);  
+  
+  useEffect(() => {
+    setIsLoggedIn(!!getToken());
+  }, []);
   
   const handleLoginLogout = async () => {
     if (isLoggedIn) {
