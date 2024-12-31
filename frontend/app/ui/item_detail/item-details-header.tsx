@@ -8,7 +8,7 @@ import { sendItemCount } from "@/services/portfolioService";
 
 interface ItemDetailHeaderProps {
   item: ItemInfo;
-  isInPortfolio: boolean;
+  isInPortfolio: boolean|null;
 }
 
 function StatDisplayer({
@@ -32,7 +32,7 @@ export default function ItemDetailHeader({
   isInPortfolio: inPortfolio,
 }: ItemDetailHeaderProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [isInPortfolio, setIsInPortfolio] = useState(inPortfolio);
+  const [isInPortfolio, setIsInPortfolio] = useState<boolean|null>(inPortfolio);
 
   const handleChangePortfolio = () => {
     sendItemCount(item.name, isInPortfolio ? 0 : 1);
@@ -87,13 +87,16 @@ export default function ItemDetailHeader({
           />
           <StatDisplayer title="Accepted" value={item.timeAccepted} />
         </div>
-        <Button
-          variant={"outline"}
-          className="mt-auto"
-          onClick={handleChangePortfolio}
-        >
-          {isInPortfolio ? "Remove from portfolio" : "Add to portfolio"}
-        </Button>
+
+        {isInPortfolio !== null && (
+          <Button
+            variant={"outline"}
+            className="mt-auto"
+            onClick={handleChangePortfolio}
+          >
+            {isInPortfolio ? "Remove from portfolio" : "Add to portfolio"}
+          </Button>
+        )}
       </div>
     </div>
   );

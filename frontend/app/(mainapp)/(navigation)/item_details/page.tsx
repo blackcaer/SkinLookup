@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import SearchBar from "@/app/ui/all/search-bar";
 import ItemDetailHeader from "@/app/ui/item_detail/item-details-header";
 import ChartPrice from "@/app/ui/charts/chart-price";
 import ChartVolume from "@/app/ui/charts/chart-volume";
@@ -16,7 +15,7 @@ const ItemDetailsPageComp = () => {
   const [name, setName] = useState<string | null>(searchParams.get("name"));
   const [itemData, setItemData] = useState<ItemData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isInPortfolio, setIsInPortfolio] = useState<boolean>(false);
+  const [isInPortfolio, setIsInPortfolio] = useState<boolean|null>(null);
 
   useEffect(() => {
     const fetchRandomItemName = async () => {
@@ -49,7 +48,8 @@ const ItemDetailsPageComp = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setIsInPortfolio(data["is_in_portfolio"]);
+          if(token)
+            setIsInPortfolio(data["is_in_portfolio"]);
           setItemData(data["item"]);
         } else {
           if (token) {
@@ -76,9 +76,6 @@ const ItemDetailsPageComp = () => {
 
   return (
     <div>
-      {/* <div className="mb-6">
-        <SearchBar />
-      </div> */}
 
       <div className="flex flex-col gap-6">
         {isLoading ? (
