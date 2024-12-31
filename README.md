@@ -50,6 +50,7 @@ This measures include:
 Other features:
 
 - Implemented **debouncer** for adding items in portfolio to reduce load on backend
+- **Asynchronous** portfolio item data update on the backend side
 - Implemented **short circuit mechanism** for searching to also reduce load on backend
   - Search bar is only displaying 10 results at a time so I keep other results that I've got from backend and try to filter those to get another 10 results. Only if I get less than that I send request to backend for more
 - **Charts** with price history, volume history and summed up price history of group of items
@@ -149,37 +150,45 @@ Ommited files are automatically generated.
 
 ## How to run
 
-Backend server:
+You have to have python,pip and npm installed to run this project.
 
-`cd backend`
+Do it in cmd instead of powershell.
 
-Create virtual enviroment: `python -m venv venv`
+**Backend server**:
 
-Activate virtual enviroment: `.\venv\scripts\activate `  
+- `cd backend`
+
+- Create virtual enviroment: `python -m venv venv`
+
+- Activate virtual enviroment: `".\venv\scripts\activate"`  
 (if it's not activating try using cmd instead of powershell)
 
-If (venv) is present before your directory in terminal, install required packages:
-`pip install requirements.txt`
+- If (venv) is present before your directory in terminal, install required packages:
+`pip install -r requirements.txt`
 
-~~Migrate django db if needed:
+- ~~Migrate django db if needed:
 `python manage.py migrate`~~
 
-Run Django server:
-`python runserver`
+- Run Django server:
+`python manage.py runserver`
 
-Server should run on http://127.0.0.1:8000/
+- Server should run on http://127.0.0.1:8000/
 
-Frontend server: (in other console):
+**Frontend server** (in other console):
 
-`cd frontend/`
+- `cd frontend/`
 
-Install required packages: `npm install`
+- Install required packages: `npm install`
 
-Create build: `npm run build`
+- Create build: `npm run build` (should take around 2 minutes)
 
-Start app: `npm run start`
+- Start app: `npm run start`
 
-If doesn't work for some reason run in developement mode\*: `npm run dev`
+- If doesn't work for some reason run in developement mode\*: `npm run dev`
+
+- Server should run at http://localhost:3000
+
+- You can login using example account `login: admin` `password: admin`
 
 \*-Development is faster to run but switching between sites might take longed due to jit compiling. If you click through routes and wait for 10-20s it should be faster
 
