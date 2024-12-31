@@ -49,7 +49,7 @@ export default function Page() {
           console.error(
             `Bad status code: ${response.statusText} (${response.status})`
           );
-          if (token) 
+          if (token && response.status == 401) 
           {
             // Authorization error, expired token
             clearTokens();
