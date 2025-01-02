@@ -128,7 +128,8 @@ class PortfolioItem(models.Model):
     item_data = models.ForeignKey(ItemData, on_delete=models.CASCADE)
     count = models.IntegerField()
 
-    unique_together = [['user', 'item_data']]
+    class Meta:
+        unique_together = [['user', 'item_data']]
 
     def __str__(self):
         return f"{self.item_data.item.name} - {self.count}"
