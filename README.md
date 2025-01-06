@@ -1,3 +1,8 @@
+
+<h2 align="center">
+   <a href="https://youtu.be/ZMhBywULzs4" target="_blank">Click here to see short demo of the project</a>
+</h2>
+
 ## Note about usage of Typescript insead of Javascript
 
 I've decided to use TypeScript in this project as part of the front-end implementation. TypeScript is a **superset of JavaScript**, meaning that every valid JavaScript program is also valid TypeScript. To effectively write TypeScript, a strong understanding of JavaScript is required, as the core language concepts, syntax, and functionality are shared.
@@ -13,12 +18,17 @@ This implementation does not deviate from the course requirements, as TypeScript
 
 ## SkinLookup - introduction
 
+This web application allows you to browse Rust skins, add them to your portfolio, view details, and display historical price/volume charts, among other features.
+
 I've been working with Rust skins for few years now, it's been my hobby.
 I’ve created several tools for personal use to calculate, aggregate, and automate tasks related to the Steam Market and Rust skins.  I've always wanted to create something less technical and more graphical related to it, so using it would be not only be helpful but visually pleasing as well but I never had time for it.
 
 This is the Final Project for Harvard's CS50W course - "Capstone".
 
-This web application allows you to browse Rust skins, add them to your portfolio, view details, and display historical price/volume charts, among other features.
+### What are Rust skins
+
+Rust skins allow players in the game Rust (~100k avg. players) to change the appearance of their items. They can be sold on [Steam market](https://steamcommunity.com/market/search?appid=252490#p1_price_desc) and you can speculate on them similarly to any other asset. 
+There are over 4000 of them with some reaching half a thousand sales per day.
 
 ## Distinctiveness and Complexity
 
@@ -49,8 +59,9 @@ The measures taken include:
 
 Other features:
 
-- Implemented a **debouncer** for adding items to the portfolio to reduce backend load
+- **JWT Authorization**
 - **Asynchronous** portfolio item data update on the backend-side
+- Implemented a **debouncer** for adding items to the portfolio to reduce backend load
 - Implemented **short circuit mechanism** for searching to also reduce load on backend
   - Search bar is only displaying 10 results at a time so I keep other results that I've got from backend and try to filter those to get another 10 results. Only if I get less than that I send request to backend for more
 - **Charts** with price history, volume history and summed up price history of group of items
