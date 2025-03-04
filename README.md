@@ -3,19 +3,6 @@
    <a href="https://youtu.be/ZMhBywULzs4" target="_blank">Click here to see short demo of the project</a>
 </h2>
 
-## Note about usage of Typescript insead of Javascript
-
-I've decided to use TypeScript in this project as part of the front-end implementation. TypeScript is a **superset of JavaScript**, meaning that every valid JavaScript program is also valid TypeScript. To effectively write TypeScript, a strong understanding of JavaScript is required, as the core language concepts, syntax, and functionality are shared.
-
-My decision to use TypeScript is driven by two primary reasons:
-
-- It works seamlessly with Next.js which I want to learn along with Typescript
-- TypeScript adds static typing, improved tooling, and other modern features to JavaScript, which can enhance code maintainability and reduce runtime errors
-
-"Your web application must utilize [...] JavaScript on the front-end."
-
-This implementation does not deviate from the course requirements, as TypeScript is fundamentally JavaScript with additional features. All JavaScript code remains valid and operational within this framework.
-
 ## SkinLookup - introduction
 
 This web application allows you to browse Rust skins, add them to your portfolio, view details, and display historical price/volume charts, among other features.
@@ -71,9 +58,50 @@ Other features:
 - **Prefetching** of crucial images
 - And more
 
+## How to run
+
+You have to have python,pip and npm installed to run this project.
+
+Do it in cmd instead of powershell.
+
+**Backend server**:
+
+- `cd backend`
+
+- Create virtual environment: `python -m venv venv`
+
+- Activate virtual environment: `".\venv\scripts\activate"`  
+(if it's not activating try using cmd instead of powershell)
+
+- If (venv) is present before your directory in terminal, install required packages:
+`pip install -r requirements.txt`
+
+- Run Django server:
+`python manage.py runserver`
+
+- Server should run on http://127.0.0.1:8000/
+
+**Frontend server** (in other console):
+
+- `cd frontend/`
+
+- Install required packages: `npm install`
+
+- Create build: `npm run build` (should take around 2 minutes)
+
+- Start app: `npm run start`
+
+- If doesn't work for some reason run in development mode\*: `npm run dev`
+
+- Server should run at http://localhost:3000
+
+- You can login using example account `login: admin` `password: admin`
+
+\*-Development is faster to run but switching between sites might take longed due to jit compiling. If you click through routes and wait for 10-20s it should be faster
+
 ## File documentation
 
-"What’s contained in each file you created"
+(Required by CS50W "What’s contained in each file you created")
 
 Ommited files are automatically generated.
 
@@ -158,47 +186,6 @@ Ommited files are automatically generated.
 - .gitignore - files and folders for git to ignore
 - next.config.ts - File with project configurations
 - package.json - File containing required packages
-
-## How to run
-
-You have to have python,pip and npm installed to run this project.
-
-Do it in cmd instead of powershell.
-
-**Backend server**:
-
-- `cd backend`
-
-- Create virtual environment: `python -m venv venv`
-
-- Activate virtual environment: `".\venv\scripts\activate"`  
-(if it's not activating try using cmd instead of powershell)
-
-- If (venv) is present before your directory in terminal, install required packages:
-`pip install -r requirements.txt`
-
-- Run Django server:
-`python manage.py runserver`
-
-- Server should run on http://127.0.0.1:8000/
-
-**Frontend server** (in other console):
-
-- `cd frontend/`
-
-- Install required packages: `npm install`
-
-- Create build: `npm run build` (should take around 2 minutes)
-
-- Start app: `npm run start`
-
-- If doesn't work for some reason run in development mode\*: `npm run dev`
-
-- Server should run at http://localhost:3000
-
-- You can login using example account `login: admin` `password: admin`
-
-\*-Development is faster to run but switching between sites might take longed due to jit compiling. If you click through routes and wait for 10-20s it should be faster
 
 ## Other info
 
