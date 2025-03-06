@@ -1,7 +1,7 @@
 
-<h2 align="center">
+<h1 align="center">
    <a href="https://youtu.be/ZMhBywULzs4" target="_blank">Click here to see short demo of the project</a>
-</h2>
+</h1>
 
 ## SkinLookup - introduction
 
@@ -37,14 +37,14 @@ The measures taken include:
 
 - **Custom caching logic** on the backend for caching price data for adjustable period of time (ITEMDATA_EXPIRATION_HOURS)
   - This includes ItemData model
-  - Automatic backend-side data fetching - if cache has expired it fetched newest data automatically (and saves it)
+  - Automatic backend-side data fetching - if cache has expired it fetches newest data automatically (and saves it)
   - Lazy loading - data is refreshed only when needed
   - Adjustable size of requested price history (lowered for development time - MAX_DAYS_PHSM)
 - Using long **cache for images** (minimumCacheTTL) in Next.js config
 - **Pagination** of site with all items, reducing amount of image requests
 - Using a fixed, previously scraped dataset that includes only a subset of all (~4400) Rust items
 
-Other features:
+### Other features:
 
 - **JWT Authorization**
 - **Asynchronous** portfolio item data update on the backend-side
